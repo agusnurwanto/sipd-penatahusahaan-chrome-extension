@@ -95,41 +95,37 @@ function capitalizeFirstLetter(string) {
   	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function tambahUser(){
-	jQuery.ajax({
-		url: config.sipd_url+'/siap/data/user',
-		type: 'post',
-		data: {
-			"skpd":{
-				"idSkpd":2284,
-				"namaSkpd":"KELURAHAN SUKOWINANGUN",
-				"kodeSkpd":"7.01.0.00.0.00.01.09",
-				"idDaerah":config.id_daerah
-			},
-			"userName":"agusnurwanto",
-			"nip":"333333333333333333",
-			"fullName":"3asdfads",
-			"nomorHp":"342435234",
-			"rank":"ad",
-			"npwp":"444444444444444",
-			"jabatan":{
-				"idJabatan":17,
-				"namaJabatan":"OPERATOR OPD",
-				"idRole":17,
-				"order":15,
-				"label":"OPERATOR OPD",
-				"value":17
-			},
-			"kpa":null,
-			"bank":null,
-			"group":"qwe",
-			"password":"asdfasd",
-			"konfirmasiPassword":"asdfasd"
-		},
-		success: function(penerima){
-			window.allPenerimaSCE = penerima.data;
-			return resolve(penerima.data);
-		}
+function tambahUser(data_user){
+	jQuery('#wrap-loading').show();
+	return new Promise(function(resolve, reject){
+		jQuery.ajax({
+			url: config.sipd_url+'/siap/data/user',
+			type: 'post',
+			data: data_user,
+			success: function(res){
+				var data_u = { 
+					action: 'singkron_user_penatausahaan',
+					tahun_anggaran: config.tahun_anggaran,
+					api_key: config.api_key,
+					data_user: data_user
+				};
+				var data_back = {
+				    message:{
+				        type: "get-url",
+				        content: {
+						    url: config.url_server_lokal,
+						    type: 'post',
+						    data: data_u,
+			    			return: true
+						}
+				    }
+				};
+				chrome.runtime.sendMessage(data_back, function(response) {
+				    console.log('responeMessage', response);
+				});
+				return resolve(res);
+			}
+		});
 	});
 }
 
@@ -197,7 +193,7 @@ function getAllUnit(id_unit){
 				api_key: config.api_key,
 				id_skpd: id_unit
 			};
-			var data_kel = {
+			var data_back = {
 			    message:{
 			        type: "get-url",
 			        content: {
@@ -208,7 +204,7 @@ function getAllUnit(id_unit){
 					}
 			    }
 			};
-			chrome.runtime.sendMessage(data_kel, function(response) {
+			chrome.runtime.sendMessage(data_back, function(response) {
 			    console.log('responeMessage', response);
 			});
 			window.get_unit = resolve;

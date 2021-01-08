@@ -44,6 +44,8 @@ jQuery(document).ready(function(){
 							var npwp = jQuery('app-input-text[ng-model="formTambah.npwp"] input').val();
 							if(!npwp){
 								return alert('NPWP tidak boleh kosong!');
+							}else if(npwp.length != 15){
+								return alert('NPWP harus 15 karakter!');
 							}
 							var jabatan = jQuery('searchable-dropdown[ng-model="formTambah.jabatan"] input').val();
 							if(!jabatan){
@@ -98,6 +100,7 @@ jQuery(document).ready(function(){
 								"konfirmasiPassword":konfirmasiPassword
 							};
 							console.log('data_user', data_user);
+							tambahUser(data_user);
 						});
 					});
 				});
