@@ -99,7 +99,7 @@ function tambahUser(data_user){
 	jQuery('#wrap-loading').show();
 	return new Promise(function(resolve, reject){
 		jQuery.ajax({
-			url: config.sipd_url+'/siap/data/user',
+			url: config.sipd_url+'siap/data/user',
 			type: 'post',
 			data: data_user,
 			success: function(res){
