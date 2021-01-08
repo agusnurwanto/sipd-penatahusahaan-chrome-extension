@@ -4,12 +4,12 @@
 	"description": "Chrome extension untuk mempermudah manajemen data di web sipd.kemendagri.go.id/siap",
 	"version": "1",
 	"icons": {
-		"16": "img/indonesia-flag.png",
-		"48": "img/indonesia-flag.png",
-		"128": "img/indonesia-flag.png"
+		"16": "img/logo-small.png",
+		"48": "img/logo-small.png",
+		"128": "img/logo-small.png"
 	},
 	"browser_action": {
-		"default_icon": "img/indonesia-flag.png",
+		"default_icon": "img/logo-small.png",
 		"default_popup": "popup.html",
 		"default_title": "Manajemen SIPD"
 	},
@@ -32,8 +32,9 @@
 				"css/content.css"
 			],
 			"js": [
-				"js/jquery.min.js",
 				"config.js",
+				"js/jquery.min.js",
+				"js/content/content_scripts.js",
 				"js/content/functions.js",
 				"js/content/app.js"
 			],
