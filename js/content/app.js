@@ -8,7 +8,43 @@ jQuery(document).ready(function(){
 	jQuery('body').prepend(loading);
 	var current_url = window.location.href;
 
-	if(current_url.indexOf('/siap/kelola-user') != -1){
+	if(current_url.indexOf('siap/dpa-bl-rinci/cetak/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1){
+		injectScript( chrome.extension.getURL('/js/jquery.min.js'), 'html');
+		if(config.tgl_dpa){
+			var tgl = get_tanggal();
+			var tgl_dpa = jQuery(jQuery('td.text_tengah[colspan="3"]')[0]);
+			tgl_dpa.text(tgl_dpa.text().replace(/\./g, '')+' '+tgl);
+		}
+		run_download_excel();
+		var button_ind = ''
+			+'<label><input type="radio" id="load_ind"> Munculkan indikator dari RKA</label>';
+		jQuery('#action-sipd').append(button_ind);
+		jQuery('#load_ind').on('click', function(){
+			var kode_giat = get_kode_giat_laporan();
+			jQuery('#wrap-loading').show();
+			var data_ind = { 
+				action: 'get_indikator',
+				tahun_anggaran: config.tahun_anggaran,
+				api_key: config.api_key,
+				kode_giat: kode_giat
+			};
+			var data_back = {
+			    message:{
+			        type: "get-url",
+			        content: {
+					    url: config.url_server_lokal,
+					    type: 'post',
+					    data: data_ind,
+		    			return: true
+					}
+			    }
+			};
+			chrome.runtime.sendMessage(data_back, function(response) {
+			    console.log('responeMessage', response);
+			});
+			console.log('kode_giat', kode_giat);
+		});
+	}else if(current_url.indexOf('/siap/kelola-user') != -1){
 		getUser(idUser()).then(function(skpd){
 			if(skpd == ''){
 				getAllUnit(idSkpd()).then(function(all_unit){

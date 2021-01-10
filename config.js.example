@@ -4,4 +4,5 @@ var config = {
 	sipd_url : "https://xxx.sipd.kemendagri.go.id/", // alamat sipd sesuai kabupaten kota masing-masing
 	url_server_lokal : "https://xxxxxxxxxx.com/wp-admin/admin-ajax.php", // url server lokal
 	api_key : "xxxxxxxxxxxxxxxxxxx", // api key server lokal disesuaikan dengan api dari WP plugin
+	tgl_dpa : "auto", // pilihan nilai default "auto"=auto generate, false=fitur dimatikan, "isi tanggal sendiri"=tanggal 
 };
