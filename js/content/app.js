@@ -12,7 +12,7 @@ jQuery(document).ready(function(){
 		injectScript( chrome.extension.getURL('/js/jquery.min.js'), 'html');
 		if(config.tgl_dpa){
 			var tgl = get_tanggal();
-			var tgl_dpa = jQuery(jQuery('td.text_tengah[colspan="3"]')[0]);
+			var tgl_dpa = jQuery('table.tabel-standar').eq(37).find('td').eq(0);
 			tgl_dpa.text(tgl_dpa.text().replace(/\./g, '')+' '+tgl);
 		}
 		run_download_excel();

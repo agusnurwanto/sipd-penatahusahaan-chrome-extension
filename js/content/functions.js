@@ -194,7 +194,7 @@ function run_download_excel(){
 }
 
 function get_kode_giat_laporan(){
-	return jQuery('table[cellpadding="2"]').eq(0).find('>tbody>tr').eq(5).find('td').eq(2).html().split('&nbsp;')[0];
+	return jQuery('table.tabel-standar[cellpadding="4"]').eq(6).find('td').eq(2).html().split('&nbsp;')[0];
 }
 
 function capitalizeFirstLetter(string) {
