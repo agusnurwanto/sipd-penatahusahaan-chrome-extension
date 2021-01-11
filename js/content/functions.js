@@ -322,9 +322,23 @@ function getAllUnit(id_unit){
 }
 
 function idUser(){
-	return jQuery('script[type="text/javascript"]').eq(4).html().split('idUser')[1].split('return ')[1].split(';')[0];
+	var idUser = false;
+	jQuery('script[type="text/javascript"]').map(function(i, b){
+		var html = jQuery(b).html();
+		if(html.indexOf('function idUser()') != -1){
+			idUser = html.split('idUser')[1].split('return ')[1].split(';')[0];
+		}
+	});
+	return idUser;
 }
 
 function idSkpd(){
-	return jQuery('script[type="text/javascript"]').eq(4).html().split('idSkpd')[1].split('return ')[1].split(';')[0];
+	var idSkpd = false;
+	jQuery('script[type="text/javascript"]').map(function(i, b){
+		var html = jQuery(b).html();
+		if(html.indexOf('function idUser()') != -1){
+			idSkpd = html.split('idSkpd')[1].split('return ')[1].split(';')[0];
+		}
+	});
+	return idSkpd;
 }
