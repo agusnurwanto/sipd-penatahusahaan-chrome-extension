@@ -16,9 +16,13 @@ jQuery(document).ready(function(){
 			tgl_dpa.text(tgl_dpa.text().replace(/\./g, '')+' '+tgl);
 		}
 		run_download_excel();
+		var display = "display: none;";
+		if(config.manual_indikator){
+			display = "";
+		}
 		var button_ind = ''
 			+'<label><input type="radio" id="load_ind"> Munculkan indikator dari RKA</label>'
-			+'<label><input type="radio" id="edit_ind"> Edit indikator Manual</label>';
+			+'<label style="'+display+'"><input type="radio" id="edit_ind"> Edit indikator Manual</label>';
 		jQuery('#action-sipd').append(button_ind);
 		jQuery('#edit_ind').on('click', function(){
 			alert('Silahkan klik pada kolom indikator yang masih kosong untuk melakukan edit!');

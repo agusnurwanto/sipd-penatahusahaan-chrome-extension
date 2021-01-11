@@ -5,4 +5,5 @@ var config = {
 	url_server_lokal : "https://xxxxxxxxxx.com/wp-admin/admin-ajax.php", // url server lokal
 	api_key : "xxxxxxxxxxxxxxxxxxx", // api key server lokal disesuaikan dengan api dari WP plugin
 	tgl_dpa : "auto", // pilihan nilai default "auto"=auto generate, false=fitur dimatikan, "isi tanggal sendiri"=tanggal 
+	manual_indikator : false // settingan untuk melakukan edit indikator kegiatan secara manual di halaman print DPA
 };
