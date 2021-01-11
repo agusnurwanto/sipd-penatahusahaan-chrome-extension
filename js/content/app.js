@@ -59,12 +59,14 @@ jQuery(document).ready(function(){
 		});
 		jQuery('#load_ind').on('click', function(){
 			var kode_giat = get_kode_giat_laporan();
+			var kode_skpd = get_kode_skpd_laporan();
 			jQuery('#wrap-loading').show();
 			var data_ind = { 
 				action: 'get_indikator',
 				tahun_anggaran: config.tahun_anggaran,
 				api_key: config.api_key,
-				kode_giat: kode_giat
+				kode_giat: kode_giat,
+				kode_skpd: kode_skpd
 			};
 			var data_back = {
 			    message:{
