@@ -10,15 +10,16 @@ Semoga bermanfaat
 ### Plugin Wordpress WP-SIPD https://github.com/agusnurwanto/wp-sipd
 
 ### Fitur:
+- Memampilkan indikator DPA dari data RKA
+- Edit manual indikator DPA
 - ...
 
 ### Pengembangan berikutnya:
 - Melengkapi dokumentasi penggunaan di halaman wiki
 - Melengkapi video tutorial di youtube
-- Membuat user untuk sub unit
 
 ### Video tutorial
-- ...
+- Singkron RKA SKPD ke DB lokal dan menampilkan indikator kegiatan dari data RKA di laporan DPA https://youtu.be/LjHqKYT2C-M
 
 ### Istilah di Aplikasi Penatausahaan
 - Surat Penyediaan Dana yang selanjutnya disingkat SPD adalah dokumen yang menyatakan tersedianya dana untuk melaksanakan kegiatan sebagai dasar penerbitan SPP (Surat Permintaan Pembayaran).

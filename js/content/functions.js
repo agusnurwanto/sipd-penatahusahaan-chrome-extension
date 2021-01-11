@@ -197,6 +197,10 @@ function get_kode_giat_laporan(){
 	return jQuery('table.tabel-standar[cellpadding="4"]').eq(6).find('td').eq(2).html().split('&nbsp;')[0];
 }
 
+function get_kode_skpd_laporan(){
+	return jQuery('table.tabel-standar[cellpadding="4"]').eq(8).find('td').eq(2).html().split('&nbsp;')[0];
+}
+
 function capitalizeFirstLetter(string) {
   	return string.charAt(0).toUpperCase() + string.slice(1);
 }

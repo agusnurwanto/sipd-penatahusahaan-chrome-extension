@@ -38,8 +38,10 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 			get_unit(allUnitSCE);
 		}else if(res.action && res.action=='get_indikator'){
 			// sasaran program
-			var sasaran = res.data.renstra[0].sasaran_teks.replace('Sasaran : ', '');
-			jQuery('table.tabel-standar[cellpadding="4"]').eq(4).find('td').eq(2).text(sasaran);
+			if(res.data.renstra[0] && res.data.renstra[0].sasaran_teks){
+				var sasaran = res.data.renstra[0].sasaran_teks.replace('Sasaran : ', '');
+				jQuery('table.tabel-standar[cellpadding="4"]').eq(4).find('td').eq(2).text(sasaran);
+			}
 
 			// indikator program
 			var tr_ind_prog = '';

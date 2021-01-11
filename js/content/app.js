@@ -16,17 +16,57 @@ jQuery(document).ready(function(){
 			tgl_dpa.text(tgl_dpa.text().replace(/\./g, '')+' '+tgl);
 		}
 		run_download_excel();
+		var display = "display: none;";
+		if(config.manual_indikator){
+			display = "";
+		}
 		var button_ind = ''
-			+'<label><input type="radio" id="load_ind"> Munculkan indikator dari RKA</label>';
+			+'<label><input type="radio" id="load_ind"> Munculkan indikator dari RKA</label>'
+			+'<label style="'+display+'"><input type="radio" id="edit_ind"> Edit indikator Manual</label>';
 		jQuery('#action-sipd').append(button_ind);
+		jQuery('#edit_ind').on('click', function(){
+			alert('Silahkan klik pada kolom indikator yang masih kosong untuk melakukan edit!');
+			var sasaran_program = jQuery('table.tabel-standar[cellpadding="4"]').eq(4).find('td').eq(2);
+			sasaran_program.attr('contenteditable', true);
+			
+			var ind_prog = jQuery('table.tabel-standar').eq(7).find('>tbody');
+			ind_prog.attr('contenteditable', true);
+
+			var capaian_kegiatan = jQuery('table.tabel-standar').eq(15).find('>tbody');
+			capaian_kegiatan.attr('contenteditable', true);
+
+			var target_capaian_kegiatan = jQuery('table.tabel-standar').eq(16).find('>tbody');
+			target_capaian_kegiatan.attr('contenteditable', true);
+
+			var keluaran_kegiatan = jQuery('table.tabel-standar').eq(19).find('>tbody');
+			keluaran_kegiatan.attr('contenteditable', true);
+
+			var target_keluaran_kegiatan = jQuery('table.tabel-standar').eq(20).find('>tbody');
+			target_keluaran_kegiatan.attr('contenteditable', true);
+
+			var hasil_kegiatan = jQuery('table.tabel-standar').eq(21);
+			if(hasil_kegiatan.find('tr').length == 0){
+				hasil_kegiatan.append('<tr><td contenteditable="true"></td></tr>');
+			}
+
+			var target_hasil_kegiatan = jQuery('table.tabel-standar').eq(22);
+			if(target_hasil_kegiatan.find('tr').length == 0){
+				target_hasil_kegiatan.append('<tr><td contenteditable="true"></td></tr>');
+			}
+
+			var kelompok_sasaran = jQuery('#rka>tbody>tr').eq(15).find('td');
+			kelompok_sasaran.attr('contenteditable', true);
+		});
 		jQuery('#load_ind').on('click', function(){
 			var kode_giat = get_kode_giat_laporan();
+			var kode_skpd = get_kode_skpd_laporan();
 			jQuery('#wrap-loading').show();
 			var data_ind = { 
 				action: 'get_indikator',
 				tahun_anggaran: config.tahun_anggaran,
 				api_key: config.api_key,
-				kode_giat: kode_giat
+				kode_giat: kode_giat,
+				kode_skpd: kode_skpd
 			};
 			var data_back = {
 			    message:{
