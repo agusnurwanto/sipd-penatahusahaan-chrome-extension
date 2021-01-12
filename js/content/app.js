@@ -8,7 +8,20 @@ jQuery(document).ready(function(){
 	jQuery('body').prepend(loading);
 	var current_url = window.location.href;
 
-	if(current_url.indexOf('siap/dpa-bl-rinci/cetak/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1){
+	if(current_url.indexOf('siap/login') != -1){
+		var pilih_skpd = ''
+			+'<div style="margin-bottom: 20px;">'
+				+'<select class="input-xl form-control input-dark m-b-md" id="pilih_skpd">'
+					+'<option value="">Login PA pilih ID SKPD</option>'
+				+'</select>'
+			+'</div>';
+		jQuery('#email').before(pilih_skpd);
+		getAllUnit();
+		jQuery('#pilih_skpd').on('change', function(){
+			var val = jQuery(this).val();
+			jQuery('#email').val(val);
+		});
+	}else if(current_url.indexOf('siap/dpa-bl-rinci/cetak/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1){
 		injectScript( chrome.extension.getURL('/js/jquery.min.js'), 'html');
 		if(config.tgl_dpa){
 			var tgl = get_tanggal();
@@ -21,9 +34,38 @@ jQuery(document).ready(function(){
 			display = "";
 		}
 		var button_ind = ''
+			+'<select id="pilih_skpd" style="min-width: 200px; margin: 0 5px 0 10px; height: 30px;"><option value="">Ganti ID SKPD</option></select>'
 			+'<label><input type="radio" id="load_ind"> Munculkan indikator dari RKA</label>'
 			+'<label style="'+display+'"><input type="radio" id="edit_ind"> Edit indikator Manual</label>';
 		jQuery('#action-sipd').append(button_ind);
+		var id_skpd = get_id_skpd_laporan(current_url);
+		jQuery('#wrap-loading').show();
+		var data_ind = { 
+			action: 'get_all_sub_unit',
+			tahun_anggaran: config.tahun_anggaran,
+			api_key: config.api_key,
+			id_skpd: id_skpd
+		};
+		var data_back = {
+		    message:{
+		        type: "get-url",
+		        content: {
+				    url: config.url_server_lokal,
+				    type: 'post',
+				    data: data_ind,
+	    			return: true
+				}
+		    }
+		};
+		chrome.runtime.sendMessage(data_back, function(response) {
+		    console.log('responeMessage', response);
+		});
+		jQuery('#pilih_skpd').on('change', function(){
+			var val = jQuery(this).val();
+			if(val != ''){
+				window.location.href = current_url.replace('/'+id_skpd+'?','/'+val+'?');
+			}
+		});
 		jQuery('#edit_ind').on('click', function(){
 			alert('Silahkan klik pada kolom indikator yang masih kosong untuk melakukan edit!');
 			var sasaran_program = jQuery('table.tabel-standar[cellpadding="4"]').eq(4).find('td').eq(2);

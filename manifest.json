@@ -29,11 +29,13 @@
 				"https://*.sipd.kemendagri.go.id/*"
 			],
 			"css": [
-				"css/content.css"
+				"css/content.css",
+				"css/select2.min.css"
 			],
 			"js": [
 				"config.js",
 				"js/jquery.min.js",
+				"js/select2.min.js",
 				"js/content/content_scripts.js",
 				"js/content/functions.js",
 				"js/content/app.js"

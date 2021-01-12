@@ -22,20 +22,41 @@ chrome.runtime.sendMessage(data, function(response) {
 
 chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 	console.log('sender, request', sender, request);
+	var current_url = window.location.href;
 	if(request.type == 'response-fecth-url'){
 		var res = request.data;
 		console.log(request.data);
 		if(res.action && res.action=='get_unit'){
-			var input = ''
-				+'<div class="col-md-6 m-b-md">'
-					+'<div class="app-input-text">'
-						+'<label class="app-input-text__label">SKPD dari Extension</label>'
-		        		+'<input type="text" class="app-input-text__input" disabled value="'+res.data[0].nama_skpd+'"/>'
-	        		+'</div>'
-	        	+'</div>';
-			jQuery('app-input-text[ng-model="formTambah.skpd.namaSkpd"]').parent().after(input);
-			window.allUnitSCE = res.data[0];
-			get_unit(allUnitSCE);
+			if(current_url.indexOf('siap/login') != -1){
+				var opsi = ['<option value="">Login PA pilih ID SKPD</option>'];
+				res.data.map(function(b, i){
+					var selected = "";
+					opsi.push('<option value="_'+config.id_daerah+'_'+b.id_skpd+'">'+b.id_skpd+' '+b.nama_skpd+'</option>');
+				});
+				jQuery('#pilih_skpd').html(opsi.join(''));
+				jQuery('#pilih_skpd').select2();
+			}else{
+				var input = ''
+					+'<div class="col-md-6 m-b-md">'
+						+'<div class="app-input-text">'
+							+'<label class="app-input-text__label">SKPD dari Extension</label>'
+			        		+'<input type="text" class="app-input-text__input" disabled value="'+res.data[0].nama_skpd+'"/>'
+		        		+'</div>'
+		        	+'</div>';
+				jQuery('app-input-text[ng-model="formTambah.skpd.namaSkpd"]').parent().after(input);
+				window.allUnitSCE = res.data[0];
+				get_unit(allUnitSCE); // promise resolve
+			}
+		}else if(res.action && res.action=='get_all_sub_unit'){
+			var opsi = ['<option value="">Ganti ID SKPD</option>'];
+			res.data.map(function(b, i){
+				var selected = "";
+				if(b.id_skpd == res.id_skpd){
+					selected = "selected"
+				}
+				opsi.push('<option '+selected+' value="'+b.id_skpd+'">'+b.id_skpd+' '+b.nama_skpd+'</option>');
+			});
+			jQuery('#pilih_skpd').html(opsi.join(''));
 		}else if(res.action && res.action=='get_indikator'){
 			// sasaran program
 			if(res.data.renstra[0] && res.data.renstra[0].sasaran_teks){
