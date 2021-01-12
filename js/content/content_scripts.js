@@ -65,7 +65,7 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 			}
 
 			// indikator program
-			var tr_ind_prog = '';
+			var tr_ind_prog = '<tr><td style="width: 500px; max-width: 50%; mso-number-format:\@;"><u>(Indikator)</u></td><td style="width: 500px; max-width: 50%; mso-number-format:\@;"><u>(Target)</u></td></tr>';
 			var tr_ind_capaian = '';
 			var tr_target_ind_capaian = '';
 			res.data.ind_prog.map(function(b, i){
