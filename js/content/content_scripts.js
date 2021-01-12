@@ -80,8 +80,10 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 			var table_giat = jQuery('table[cellpadding="5"]').eq(2);
 
 			// capaian kegiatan
-			jQuery('table.tabel-standar').eq(15).find('>tbody').html(tr_ind_capaian);
-			jQuery('table.tabel-standar').eq(16).find('>tbody').html(tr_target_ind_capaian);
+			if(tr_ind_capaian != ''){
+				jQuery('table.tabel-standar').eq(15).find('>tbody').html(tr_ind_capaian);
+				jQuery('table.tabel-standar').eq(16).find('>tbody').html(tr_target_ind_capaian);
+			}
 
 			// keluaran kegiatan
 			var tr_ind_keluaran = '';
@@ -91,9 +93,11 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 					+'<tr><td width="495" style=" mso-number-format:\@;">'+b.outputteks+'</td></tr>';
 				tr_target_ind_keluaran += ''
 					+'<tr><td width="495" style=" mso-number-format:\@;">'+b.targetoutputteks+'</td></tr>';
-			})
-			jQuery('table.tabel-standar').eq(19).find('>tbody').html(tr_ind_keluaran);
-			jQuery('table.tabel-standar').eq(20).find('>tbody').html(tr_target_ind_keluaran);
+			});
+			if(tr_ind_keluaran != ''){
+				jQuery('table.tabel-standar').eq(19).find('>tbody').html(tr_ind_keluaran);
+				jQuery('table.tabel-standar').eq(20).find('>tbody').html(tr_target_ind_keluaran);
+			}
 
 			// hasil kegiatan
 			var tr_target_ind_hasil = '';
