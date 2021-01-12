@@ -89,15 +89,22 @@ jQuery(document).ready(function(){
 			var hasil_kegiatan = jQuery('table.tabel-standar').eq(21);
 			if(hasil_kegiatan.find('tr').length == 0){
 				hasil_kegiatan.append('<tr><td contenteditable="true"></td></tr>');
+			}else{
+				hasil_kegiatan.find('tr>td').attr('contenteditable', true);
 			}
 
 			var target_hasil_kegiatan = jQuery('table.tabel-standar').eq(22);
 			if(target_hasil_kegiatan.find('tr').length == 0){
 				target_hasil_kegiatan.append('<tr><td contenteditable="true"></td></tr>');
+			}else{
+				target_hasil_kegiatan.find('tr>td').attr('contenteditable', true);
 			}
 
 			var kelompok_sasaran = jQuery('#rka>tbody>tr').eq(15).find('td');
 			kelompok_sasaran.attr('contenteditable', true);
+
+			var rak = jQuery('table[class="tabel-standar"]');
+			rak.eq(rak.length-2).find('>tbody').attr('contenteditable', true);
 		});
 		jQuery('#load_ind').on('click', function(){
 			var kode_giat = get_kode_giat_laporan();
