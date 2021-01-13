@@ -105,6 +105,21 @@ jQuery(document).ready(function(){
 
 			var rak = jQuery('table[class="tabel-standar"]');
 			rak.eq(rak.length-2).find('>tbody').attr('contenteditable', true);
+
+			if(config.manual_indikator_sub_keg){
+				jQuery('.cetak>table.tabel-standar[cellpadding="4"]').map(function(i, b){
+					if(i%2 != 0){
+						return;
+					}
+					var eq_1 = 5;
+					if(i==0){
+						eq_1 = 4;
+					}
+					jQuery(b).find('>tbody>tr').eq(eq_1)
+						.find('.tabel-standar').eq(1)
+						.find('>tbody').attr('contenteditable', true);
+				});
+			}
 		});
 		jQuery('#load_ind').on('click', function(){
 			var kode_giat = get_kode_giat_laporan();

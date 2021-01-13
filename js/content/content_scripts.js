@@ -31,7 +31,11 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 				var opsi = ['<option value="">Login PA pilih ID SKPD</option>'];
 				res.data.map(function(b, i){
 					var selected = "";
-					opsi.push('<option value="_'+config.id_daerah+'_'+b.id_skpd+'">'+b.id_skpd+' '+b.nama_skpd+'</option>');
+					var nip = "";
+					if(config.nip_login){
+						nip = b.nipkepala;
+					}
+					opsi.push('<option value="'+nip+'_'+config.id_daerah+'_'+b.id_skpd+'">'+b.id_skpd+' '+b.nama_skpd+'</option>');
 				});
 				jQuery('#pilih_skpd').html(opsi.join(''));
 				jQuery('#pilih_skpd').select2();
