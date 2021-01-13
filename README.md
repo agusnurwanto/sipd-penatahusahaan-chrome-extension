@@ -12,7 +12,7 @@ Semoga bermanfaat
 ### Fitur:
 - Memampilkan indikator DPA dari data RKA
 - Edit manual indikator DPA
-- ...
+- Menampilkan anggaran kas di DPA
 
 ### Pengembangan berikutnya:
 - Melengkapi dokumentasi penggunaan di halaman wiki

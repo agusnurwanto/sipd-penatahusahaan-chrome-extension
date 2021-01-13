@@ -78,31 +78,35 @@ jQuery(document).ready(function(){
 		    console.log('responeMessage', response);
 		});
 		jQuery('#load_kas').on('click', function(){
-			var kode_giat = get_kode_giat_laporan();
-			var kode_skpd = get_kode_skpd_laporan();
-			jQuery('#wrap-loading').show();
-			var data_ind = { 
-				action: 'get_kas',
-				tahun_anggaran: config.tahun_anggaran,
-				api_key: config.api_key,
-				kode_giat: kode_giat,
-				kode_skpd: kode_skpd
-			};
-			var data_back = {
-			    message:{
-			        type: "get-url",
-			        content: {
-					    url: config.url_server_lokal,
-					    type: 'post',
-					    data: data_ind,
-		    			return: true
-					}
-			    }
-			};
-			chrome.runtime.sendMessage(data_back, function(response) {
-			    console.log('responeMessage', response);
-			});
-			console.log('kode_giat', kode_giat);
+			if(confirm('Data Anggaran Kas akan diupdate sesuai dengan data di database lokal!')){
+				var kode_giat = get_kode_giat_laporan();
+				var kode_skpd = get_kode_skpd_laporan();
+				jQuery('#wrap-loading').show();
+				var data_ind = { 
+					action: 'get_kas',
+					tahun_anggaran: config.tahun_anggaran,
+					api_key: config.api_key,
+					kode_giat: kode_giat,
+					kode_skpd: kode_skpd
+				};
+				var data_back = {
+				    message:{
+				        type: "get-url",
+				        content: {
+						    url: config.url_server_lokal,
+						    type: 'post',
+						    data: data_ind,
+			    			return: true
+						}
+				    }
+				};
+				chrome.runtime.sendMessage(data_back, function(response) {
+				    console.log('responeMessage', response);
+				});
+				console.log('kode_giat', kode_giat);
+			}else{
+				jQuery('#load_kas').prop('checked', false);
+			}
 		});
 		jQuery('#pilih_skpd').on('change', function(){
 			var val = jQuery(this).val();
