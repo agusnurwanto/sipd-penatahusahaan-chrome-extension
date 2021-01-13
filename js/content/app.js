@@ -50,9 +50,10 @@ jQuery(document).ready(function(){
 			display = "";
 		}
 		var button_ind = ''
-			+'<select id="pilih_skpd" style="min-width: 200px; margin: 0 5px 0 10px; height: 30px;"><option value="">Ganti ID SKPD</option></select>'
-			+'<label><input type="radio" id="load_ind"> Munculkan indikator dari RKA</label>'
-			+'<label style="'+display+'"><input type="radio" id="edit_ind"> Edit indikator Manual</label>';
+			+'<select id="pilih_skpd" style="min-width: 200px; margin: 0 5px 0 10px; height: 30px;"><option value="">Ganti ID SKPD</option></select><br><br>'
+			+'<label><input type="radio" id="load_ind"> Munculkan indikator dari RKA DB Lokal</label>'
+			+'<label style="'+display+'"><input type="radio" id="edit_ind"> Edit indikator Manual</label>'
+			+'<label><input type="radio" id="load_kas"> Munculkan Anggaran Kas DB Lokal</label>';
 		jQuery('#action-sipd').append(button_ind);
 		var id_skpd = get_id_skpd_laporan(current_url);
 		jQuery('#wrap-loading').show();
@@ -75,6 +76,33 @@ jQuery(document).ready(function(){
 		};
 		chrome.runtime.sendMessage(data_back, function(response) {
 		    console.log('responeMessage', response);
+		});
+		jQuery('#load_kas').on('click', function(){
+			var kode_giat = get_kode_giat_laporan();
+			var kode_skpd = get_kode_skpd_laporan();
+			jQuery('#wrap-loading').show();
+			var data_ind = { 
+				action: 'get_kas',
+				tahun_anggaran: config.tahun_anggaran,
+				api_key: config.api_key,
+				kode_giat: kode_giat,
+				kode_skpd: kode_skpd
+			};
+			var data_back = {
+			    message:{
+			        type: "get-url",
+			        content: {
+					    url: config.url_server_lokal,
+					    type: 'post',
+					    data: data_ind,
+		    			return: true
+					}
+			    }
+			};
+			chrome.runtime.sendMessage(data_back, function(response) {
+			    console.log('responeMessage', response);
+			});
+			console.log('kode_giat', kode_giat);
 		});
 		jQuery('#pilih_skpd').on('change', function(){
 			var val = jQuery(this).val();

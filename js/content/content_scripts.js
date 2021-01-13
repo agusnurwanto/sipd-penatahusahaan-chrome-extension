@@ -51,6 +51,13 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 				window.allUnitSCE = res.data[0];
 				get_unit(allUnitSCE); // promise resolve
 			}
+		}else if(res.action && res.action=='get_kas'){
+			var rak = jQuery('table[class="tabel-standar"]');
+			var tr = rak.eq(rak.length-2).find('>tbody>tr');
+			for(var i=0; i<12; i++){
+				tr.eq(i+1).find('>td').eq(1).text('Rp'+formatMoney(res.data.per_bulan[i],0,0,'.'));
+			}
+			tr.eq(13).find('>td').eq(1).text('Rp'+formatMoney(res.data.total,0,0,'.'));
 		}else if(res.action && res.action=='get_all_sub_unit'){
 			var opsi = ['<option value="">Ganti ID SKPD</option>'];
 			res.data.map(function(b, i){
