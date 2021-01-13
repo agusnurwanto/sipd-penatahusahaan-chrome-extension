@@ -21,6 +21,22 @@ jQuery(document).ready(function(){
 			var val = jQuery(this).val();
 			jQuery('#email').val(val);
 		});
+	}else if(current_url.indexOf('siap/rak-belanja/rak-detil/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1){
+		var tombol_singkron = ''
+			+'<div class="col-md-3 col-xs-12">'
+				+'<button class="fcbtn btn btn-danger btn-outline btn-1b" id="singkron_rak_ke_lokal"><i class="fa fa-cloud-download m-r-5"></i> <span>Singkron RAK ke DB lokal</span></button>'
+			+'</div>';
+		jQuery('.panel.panel-primary').closest('.row').append(tombol_singkron);
+		jQuery('#singkron_rak_ke_lokal').on('click', function(){
+			singkron_rak_ke_lokal();
+		});
+	}else if(current_url.indexOf('siap/rak-belanja/list/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1){
+		var tombol_singkron = ''
+			+'<button class="fcbtn btn btn-danger btn-outline btn-1b pull-right" id="singkron_rak_ke_lokal" style="margin-right: 20px;"><i class="fa fa-cloud-download m-r-5"></i> <span>Singkron RAK ke DB lokal</span></button>';
+		jQuery('a.btn-circle.pull-right').after(tombol_singkron);
+		jQuery('#singkron_rak_ke_lokal').on('click', function(){
+			singkron_rak_ke_lokal_all();
+		});
 	}else if(current_url.indexOf('siap/dpa-bl-rinci/cetak/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1){
 		injectScript( chrome.extension.getURL('/js/jquery.min.js'), 'html');
 		if(config.tgl_dpa){

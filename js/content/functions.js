@@ -351,3 +351,130 @@ function idSkpd(){
 	});
 	return idSkpd;
 }
+
+function get_kode_sbl(){
+	var s = jQuery('script');
+	var kd = s.eq(s.length-1).html().split('?kodesbl=')[1].split("'")[0];
+	return kd;
+}
+
+function getIdSkpd(){
+	return window.location.href.split('?')[0].split(''+config.id_daerah+'/')[1];
+}
+
+function singkron_rak_ke_lokal_all(){
+	jQuery('#wrap-loading').show();
+	var id_skpd = getIdSkpd();
+	jQuery.ajax({
+		url: config.sipd_url+'siap/rak-belanja/tampil-giat/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd,
+		type: 'get',
+		success: function(keg){
+			var sendData = keg.data.map(function(val, n){
+                return new Promise(function(resolve, reject){
+                	var id_sub_skpd = val.id_sub_skpd;
+                	if(val.id_sub_skpd == 0){
+                		id_sub_skpd = val.id_skpd;
+                	}
+                	singkron_rak_ke_lokal({
+                		kode_sbl: val.id_skpd+'.'+id_sub_skpd+'.'+val.id_bidang_urusan+'.'+val.id_program+'.'+val.id_giat+'.'+val.id_sub_giat
+                	}, function(detil){
+                		val.detil = detil;
+                		return resolve(val);
+                	});
+                })
+                .catch(function(e){
+                    console.log(e);
+                    return Promise.resolve(val);
+                });
+        	});
+
+			Promise.all(sendData)
+        	.then(function(val_all){
+        		alert('Berhasil Singkron Anggaran Kas');
+        		jQuery('#wrap-loading').hide();
+            })
+            .catch(function(err){
+                console.log('err', err);
+        		alert('Ada kesalahan sistem!');
+        		jQuery('#wrap-loading').hide();
+            });
+		}
+	});
+}
+function singkron_rak_ke_lokal(opsi, callback){
+	var kode_sbl = '';
+	if(opsi && opsi.kode_sbl){
+		kode_sbl = opsi.kode_sbl;
+	}else{
+		kode_sbl = get_kode_sbl();
+		jQuery('#wrap-loading').show();
+	}
+	if(!kode_sbl){
+		return alert('kodesbl tidak ditemukan!')
+	}else{
+		var id_skpd = getIdSkpd();
+		jQuery.ajax({
+			url: config.sipd_url+'siap/rak-belanja/tampil-rincian/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd+'?kodesbl='+kode_sbl,
+			type: 'get',
+			success: function(rak){
+				var data_rak = { 
+					action: 'singkron_anggaran_kas',
+					tahun_anggaran: config.tahun_anggaran,
+					api_key: config.api_key,
+					kode_sbl: kode_sbl,
+					data: {}
+				};
+				rak.data.map(function(b, i){
+					data_rak.data[i] = {}
+					data_rak.data[i].bulan_1 = b.bulan_1;
+					data_rak.data[i].bulan_2 = b.bulan_2;
+					data_rak.data[i].bulan_3 = b.bulan_3;
+					data_rak.data[i].bulan_4 = b.bulan_4;
+					data_rak.data[i].bulan_5 = b.bulan_5;
+					data_rak.data[i].bulan_6 = b.bulan_6;
+					data_rak.data[i].bulan_7 = b.bulan_7;
+					data_rak.data[i].bulan_8 = b.bulan_8;
+					data_rak.data[i].bulan_9 = b.bulan_9;
+					data_rak.data[i].bulan_10 = b.bulan_10;
+					data_rak.data[i].bulan_11 = b.bulan_11;
+					data_rak.data[i].bulan_12 = b.bulan_12;
+					data_rak.data[i].id_akun = b.id_akun;
+					data_rak.data[i].id_bidang_urusan = b.id_bidang_urusan;
+					data_rak.data[i].id_daerah = b.id_daerah;
+					data_rak.data[i].id_giat = b.id_giat;
+					data_rak.data[i].id_program = b.id_program;
+					data_rak.data[i].id_skpd = b.id_skpd;
+					data_rak.data[i].id_sub_giat = b.id_sub_giat;
+					data_rak.data[i].id_sub_skpd = b.id_sub_skpd;
+					data_rak.data[i].id_unit = b.id_unit;
+					data_rak.data[i].kode_akun = b.kode_akun;
+					data_rak.data[i].nama_akun = b.nama_akun;
+					data_rak.data[i].selisih = b.selisih;
+					data_rak.data[i].tahun = b.tahun;
+					data_rak.data[i].total_akb = b.total_akb;
+					data_rak.data[i].total_rincian = b.total_rincian;
+				});
+				var data_back = {
+				    message:{
+				        type: "get-url",
+				        content: {
+						    url: config.url_server_lokal,
+						    type: 'post',
+						    data: data_rak,
+			    			return: true
+						}
+				    }
+				};
+				if(opsi && opsi.kode_sbl){
+					data_back.message.content.return = false;
+				}
+				chrome.runtime.sendMessage(data_back, function(response) {
+				    console.log('responeMessage', response);
+					if(callback){
+				    	callback(data_rak);
+				    }
+				});
+			}
+		})
+	}
+}
