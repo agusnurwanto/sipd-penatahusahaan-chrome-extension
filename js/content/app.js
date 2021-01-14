@@ -129,39 +129,46 @@ jQuery(document).ready(function(){
 		});
 		jQuery('#edit_ind').on('click', function(){
 			alert('Silahkan klik pada kolom indikator yang masih kosong untuk melakukan edit!');
-			var sasaran_program = jQuery('table.tabel-standar[cellpadding="4"]').eq(4).find('td').eq(2);
+
+			var no_eq = 0;
+			var cek_no_dpa =jQuery('table.tabel-standar').eq(2).find('>tbody>tr>td').eq(0).text().trim();
+			if(cek_no_dpa == 'Nomor DPA'){
+				no_eq = 1;
+			}
+
+			var sasaran_program = jQuery('table.tabel-standar[cellpadding="4"]').eq(4+no_eq).find('td').eq(2);
 			sasaran_program.attr('contenteditable', true);
 			
-			var ind_prog = jQuery('table.tabel-standar').eq(7).find('>tbody');
+			var ind_prog = jQuery('table.tabel-standar').eq(7+no_eq).find('>tbody');
 			ind_prog.attr('contenteditable', true);
 
-			var capaian_kegiatan = jQuery('table.tabel-standar').eq(15).find('>tbody');
+			var capaian_kegiatan = jQuery('table.tabel-standar').eq(15+no_eq).find('>tbody');
 			capaian_kegiatan.attr('contenteditable', true);
 
-			var target_capaian_kegiatan = jQuery('table.tabel-standar').eq(16).find('>tbody');
+			var target_capaian_kegiatan = jQuery('table.tabel-standar').eq(16+no_eq).find('>tbody');
 			target_capaian_kegiatan.attr('contenteditable', true);
 
-			var keluaran_kegiatan = jQuery('table.tabel-standar').eq(19).find('>tbody');
+			var keluaran_kegiatan = jQuery('table.tabel-standar').eq(19+no_eq).find('>tbody');
 			keluaran_kegiatan.attr('contenteditable', true);
 
-			var target_keluaran_kegiatan = jQuery('table.tabel-standar').eq(20).find('>tbody');
+			var target_keluaran_kegiatan = jQuery('table.tabel-standar').eq(20+no_eq).find('>tbody');
 			target_keluaran_kegiatan.attr('contenteditable', true);
 
-			var hasil_kegiatan = jQuery('table.tabel-standar').eq(21);
+			var hasil_kegiatan = jQuery('table.tabel-standar').eq(21+no_eq);
 			if(hasil_kegiatan.find('tr').length == 0){
 				hasil_kegiatan.append('<tr><td contenteditable="true"></td></tr>');
 			}else{
 				hasil_kegiatan.find('tr>td').attr('contenteditable', true);
 			}
 
-			var target_hasil_kegiatan = jQuery('table.tabel-standar').eq(22);
+			var target_hasil_kegiatan = jQuery('table.tabel-standar').eq(22+no_eq);
 			if(target_hasil_kegiatan.find('tr').length == 0){
 				target_hasil_kegiatan.append('<tr><td contenteditable="true"></td></tr>');
 			}else{
 				target_hasil_kegiatan.find('tr>td').attr('contenteditable', true);
 			}
 
-			var kelompok_sasaran = jQuery('#rka>tbody>tr').eq(15).find('td');
+			var kelompok_sasaran = jQuery('#rka>tbody>tr').eq(15+no_eq).find('td');
 			kelompok_sasaran.attr('contenteditable', true);
 
 			var rak = jQuery('table[class="tabel-standar"]');
