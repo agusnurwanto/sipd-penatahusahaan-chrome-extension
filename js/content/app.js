@@ -39,6 +39,19 @@ jQuery(document).ready(function(){
 		});
 	}else if(current_url.indexOf('siap/dpa-bl-rinci/cetak/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1){
 		injectScript( chrome.extension.getURL('/js/jquery.min.js'), 'html');
+
+		if(config.print_magic){
+			jQuery('.cetak>table.tabel-standar[cellpadding="4"]').map(function(i, b){
+				if(i%2 != 0){
+					return;
+				}else{
+					jQuery(b).css('page-break-before', 'always');
+				}
+			});
+			var rak = jQuery('table[class="tabel-standar"]');
+			rak.eq(rak.length-3).css('page-break-before', 'always');
+		}
+
 		if(config.tgl_dpa){
 			var tgl = get_tanggal();
 			var tgl_dpa = jQuery('table.tabel-standar').eq(37).find('td').eq(0);

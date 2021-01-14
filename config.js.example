@@ -7,5 +7,6 @@ var config = {
 	tgl_dpa : "auto", // pilihan nilai default "auto"=auto generate, false=fitur dimatikan, "isi tanggal sendiri"=tanggal 
 	manual_indikator : false, // settingan untuk melakukan edit indikator kegiatan secara manual di halaman print DPA
 	manual_indikator_sub_keg : false, // edit indikator manual sub kegiatan
-	nip_login : false // menampilkan NIP kepala saat login
+	nip_login : false, // menampilkan NIP kepala saat login
+	print_magic : false // memisah tampilan print DPA per sub keg
 };
