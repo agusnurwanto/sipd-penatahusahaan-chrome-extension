@@ -209,12 +209,12 @@ function run_download_excel(){
 	});
 }
 
-function get_kode_giat_laporan(){
-	return jQuery('table.tabel-standar[cellpadding="4"]').eq(6).find('td').eq(2).html().split('&nbsp;')[0];
+function get_kode_giat_laporan(no_dpa){
+	return jQuery('table.tabel-standar[cellpadding="4"]').eq(6+no_dpa).find('td').eq(2).html().split('&nbsp;')[0];
 }
 
-function get_kode_skpd_laporan(){
-	return jQuery('table.tabel-standar[cellpadding="4"]').eq(8).find('td').eq(2).html().split('&nbsp;')[0];
+function get_kode_skpd_laporan(no_dpa){
+	return jQuery('table.tabel-standar[cellpadding="4"]').eq(8+no_dpa).find('td').eq(2).html().split('&nbsp;')[0];
 }
 
 function get_id_skpd_laporan(current_url){

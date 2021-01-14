@@ -92,8 +92,13 @@ jQuery(document).ready(function(){
 		});
 		jQuery('#load_kas').on('click', function(){
 			if(confirm('Data Anggaran Kas akan diupdate sesuai dengan data di database lokal!')){
-				var kode_giat = get_kode_giat_laporan();
-				var kode_skpd = get_kode_skpd_laporan();
+				var no_eq = 0;
+				var cek_no_dpa =jQuery('table.tabel-standar').eq(2).find('>tbody>tr>td').eq(0).text().trim();
+				if(cek_no_dpa == 'Nomor DPA'){
+					no_eq = 1;
+				}
+				var kode_giat = get_kode_giat_laporan(no_eq);
+				var kode_skpd = get_kode_skpd_laporan(no_eq);
 				jQuery('#wrap-loading').show();
 				var data_ind = { 
 					action: 'get_kas',
@@ -190,8 +195,13 @@ jQuery(document).ready(function(){
 			}
 		});
 		jQuery('#load_ind').on('click', function(){
-			var kode_giat = get_kode_giat_laporan();
-			var kode_skpd = get_kode_skpd_laporan();
+			var no_eq = 0;
+			var cek_no_dpa =jQuery('table.tabel-standar').eq(2).find('>tbody>tr>td').eq(0).text().trim();
+			if(cek_no_dpa == 'Nomor DPA'){
+				no_eq = 1;
+			}
+			var kode_giat = get_kode_giat_laporan(no_eq);
+			var kode_skpd = get_kode_skpd_laporan(no_eq);
 			jQuery('#wrap-loading').show();
 			var data_ind = { 
 				action: 'get_indikator',

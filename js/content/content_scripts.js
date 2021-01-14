@@ -69,10 +69,16 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 			});
 			jQuery('#pilih_skpd').html(opsi.join(''));
 		}else if(res.action && res.action=='get_indikator'){
+			var no_eq = 0;
+			var cek_no_dpa =jQuery('table.tabel-standar').eq(2).find('>tbody>tr>td').eq(0).text().trim();
+			if(cek_no_dpa == 'Nomor DPA'){
+				no_eq = 1;
+			}
+
 			// sasaran program
 			if(res.data.renstra[0] && res.data.renstra[0].sasaran_teks){
 				var sasaran = res.data.renstra[0].sasaran_teks.replace('Sasaran : ', '');
-				jQuery('table.tabel-standar[cellpadding="4"]').eq(4).find('td').eq(2).text(sasaran);
+				jQuery('table.tabel-standar[cellpadding="4"]').eq(4+no_eq).find('td').eq(2).text(sasaran);
 			}
 
 			// indikator program
@@ -87,13 +93,13 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 				tr_target_ind_capaian += ''
 					+'<tr><td width="495" style=" mso-number-format:\@;">'+b.targetcapaianteks+'</td></tr>';
 			});
-			jQuery('table.tabel-standar').eq(7).find('>tbody').html(tr_ind_prog);
+			jQuery('table.tabel-standar').eq(7+no_eq).find('>tbody').html(tr_ind_prog);
 			var table_giat = jQuery('table[cellpadding="5"]').eq(2);
 
 			// capaian kegiatan
 			if(tr_ind_capaian != ''){
-				jQuery('table.tabel-standar').eq(15).find('>tbody').html(tr_ind_capaian);
-				jQuery('table.tabel-standar').eq(16).find('>tbody').html(tr_target_ind_capaian);
+				jQuery('table.tabel-standar').eq(15+no_eq).find('>tbody').html(tr_ind_capaian);
+				jQuery('table.tabel-standar').eq(16+no_eq).find('>tbody').html(tr_target_ind_capaian);
 			}
 
 			// keluaran kegiatan
@@ -106,8 +112,8 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 					+'<tr><td width="495" style=" mso-number-format:\@;">'+b.targetoutputteks+'</td></tr>';
 			});
 			if(tr_ind_keluaran != ''){
-				jQuery('table.tabel-standar').eq(19).find('>tbody').html(tr_ind_keluaran);
-				jQuery('table.tabel-standar').eq(20).find('>tbody').html(tr_target_ind_keluaran);
+				jQuery('table.tabel-standar').eq(19+no_eq).find('>tbody').html(tr_ind_keluaran);
+				jQuery('table.tabel-standar').eq(20+no_eq).find('>tbody').html(tr_target_ind_keluaran);
 			}
 
 			// hasil kegiatan
@@ -119,12 +125,12 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 				tr_target_ind_hasil += ''
 					+'<tr><td width="495" style=" mso-number-format:\@;">'+b.targethasilteks+'</td></tr>';
 			})
-			jQuery('table.tabel-standar').eq(21).html(tr_ind_hasil);
-			jQuery('table.tabel-standar').eq(22).html(tr_target_ind_hasil);
+			jQuery('table.tabel-standar').eq(21+no_eq).html(tr_ind_hasil);
+			jQuery('table.tabel-standar').eq(22+no_eq).html(tr_target_ind_hasil);
 
 			// kelompok sasaran
 			if(res.data.bl[0]){
-				var td_sasaran = jQuery('#rka>tbody>tr').eq(15).find('td');
+				var td_sasaran = jQuery('#rka>tbody>tr').eq(15+no_eq).find('td');
 				var kelompok_sasaran = td_sasaran.text()+' '+res.data.bl[0]['sasaran'];
 				td_sasaran.text(kelompok_sasaran);
 			}
