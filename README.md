@@ -20,6 +20,7 @@ Semoga bermanfaat
 
 ### Video tutorial
 - Singkron RKA SKPD ke DB lokal dan menampilkan indikator kegiatan dari data RKA di laporan DPA https://youtu.be/LjHqKYT2C-M
+- Integrasi data SIPD ke SIMDA keuangan https://youtu.be/vFOsAlnxmTo
 
 ### Istilah di Aplikasi Penatausahaan
 - Surat Penyediaan Dana yang selanjutnya disingkat SPD adalah dokumen yang menyatakan tersedianya dana untuk melaksanakan kegiatan sebagai dasar penerbitan SPP (Surat Permintaan Pembayaran).

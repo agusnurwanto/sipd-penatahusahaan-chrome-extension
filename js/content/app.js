@@ -8,7 +8,7 @@ jQuery(document).ready(function(){
 	jQuery('body').prepend(loading);
 	var current_url = window.location.href;
 
-	if(current_url.indexOf('siap/login') != -1){
+	if(jQuery('input#email[name="userName"]').length >= 1){
 		var pilih_skpd = ''
 			+'<div style="margin-bottom: 20px;">'
 				+'<select class="input-xl form-control input-dark m-b-md" id="pilih_skpd">'
@@ -16,6 +16,7 @@ jQuery(document).ready(function(){
 				+'</select>'
 			+'</div>';
 		jQuery('#email').before(pilih_skpd);
+		jQuery('#idDaerah').val(config.id_daerah);
 		getAllUnit();
 		jQuery('#pilih_skpd').on('change', function(){
 			var val = jQuery(this).val();

@@ -27,7 +27,7 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 		var res = request.data;
 		console.log(request.data);
 		if(res.action && res.action=='get_unit'){
-			if(current_url.indexOf('siap/login') != -1){
+			if(jQuery('input#email[name="userName"]').length >= 1){
 				var opsi = ['<option value="">Login PA pilih ID SKPD</option>'];
 				res.data.map(function(b, i){
 					var selected = "";
