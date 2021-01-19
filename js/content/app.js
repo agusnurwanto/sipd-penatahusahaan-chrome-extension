@@ -38,8 +38,32 @@ jQuery(document).ready(function(){
 		jQuery('#singkron_rak_ke_lokal').on('click', function(){
 			singkron_rak_ke_lokal_all();
 		});
-	}else if(current_url.indexOf('siap/dpa-bl-rinci/cetak/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1){
+	}else if(
+		current_url.indexOf('siap/dpa-bl-rinci/cetak/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
+		|| current_url.indexOf('siap/dpa-biaya/cetak/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
+		|| current_url.indexOf('siap/dpa-bl/cetak/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
+		|| current_url.indexOf('siap/dpa-penda/cetak/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
+		|| current_url.indexOf('siap/dpa-skpd/cetak/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
+	){
 		injectScript( chrome.extension.getURL('/js/jquery.min.js'), 'html');
+
+		var cek_no_dpa =jQuery('table.tabel-standar').eq(2).find('>tbody>tr>td').eq(0).text().trim();
+		if(cek_no_dpa == 'Nomor DPA'){
+			if(config.nip_ppkd){
+				jQuery('.text-merah.text_blok.text_20').hide();
+				var ttd_ppkd = ''
+					+'<tr><td class="text_tengah"><br>Mengesahkan,</td></tr>'
+					+'<tr><td class="text_tengah" style="font-size: 110%; text-align: center; mso-number-format:\@;">PPKD</td></tr>'
+	                +'<tr><td height="80" style=" mso-number-format:\@;">&nbsp;</td></tr>'
+	                +'<tr><td class="text_tengah" style=" text-align: center; mso-number-format:\@;">'+config.nama_ppkd+'</td></tr>'
+	                +'<tr><td class="text_tengah" style=" text-align: center; mso-number-format:\@;">NIP. '+config.nip_ppkd+'</td></tr>';
+				var rak = jQuery('table[class="tabel-standar"]');
+				if(rak.eq(rak.length-2).find('>tbody .tabel-standar tbody>tr').eq(7).text() != 'PPKD'){
+					rak.eq(rak.length-2).find('>tbody .tabel-standar tbody').append(ttd_ppkd);
+				}
+			}
+		}
+
 
 		if(config.print_magic){
 			jQuery('.cetak>table.tabel-standar[cellpadding="4"]').map(function(i, b){

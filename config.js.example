@@ -8,5 +8,7 @@ var config = {
 	manual_indikator : false, // settingan untuk melakukan edit indikator kegiatan secara manual di halaman print DPA
 	manual_indikator_sub_keg : false, // edit indikator manual sub kegiatan
 	nip_login : false, // menampilkan NIP kepala saat login
-	print_magic : false // memisah tampilan print DPA per sub keg
+	print_magic : false, // memisah tampilan print DPA per sub keg
+	nip_ppkd : false, // diisi dengan NIP PPKD penandatangan DPA untuk yang tidak muncul TTD PPKD, nilai default false
+	nama_ppkd : false // diisi dengan Nama PPKD penandatangan DPA untuk yang tidak muncul TTD PPKD, nilai default false
 };
