@@ -437,6 +437,10 @@ function singkron_rak_ke_lokal(opsi, callback){
 			url_rak = config.sipd_url+'siap/rak-belanja/tampil-rincian/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd+'?kodesbl='+kode_sbl;
 		}else if(opsi.type == 'pendapatan'){
 			url_rak = config.sipd_url+'siap/rak-pendapatan/tampil-pendapatan/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd;
+		}else if(opsi.type == 'pembiayaan-penerimaan'){
+			url_rak = config.sipd_url+'siap/rak-pembiayaan/tampil-pembiayaan/penerimaan/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd;
+		}else if(opsi.type == 'pembiayaan-pengeluaran'){
+			url_rak = config.sipd_url+'siap/rak-pembiayaan/tampil-pembiayaan/pengeluaran/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd;
 		}
 		jQuery.ajax({
 			url: url_rak,

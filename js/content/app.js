@@ -27,6 +27,8 @@ jQuery(document).ready(function(){
 	}else if(
 		current_url.indexOf('siap/rak-belanja/rak-detil/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
 		|| current_url.indexOf('siap/rak-pendapatan/list/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
+		|| current_url.indexOf('siap/rak-pembiayaan/list/penerimaan/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
+		|| current_url.indexOf('siap/rak-pembiayaan/list/pengeluaran/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
 	){
 		var tombol_singkron = ''
 			+'<div class="col-md-3 col-xs-12">'
@@ -37,6 +39,10 @@ jQuery(document).ready(function(){
 			var type = 'belanja';
 			if(current_url.indexOf('siap/rak-pendapatan/list/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1){
 				type = 'pendapatan';
+			}else if(current_url.indexOf('siap/rak-pembiayaan/list/penerimaan/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1){
+				type = 'pembiayaan-penerimaan';
+			}else if(current_url.indexOf('siap/rak-pembiayaan/list/pengeluaran/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1){
+				type = 'pembiayaan-pengeluaran';
 			}
 			singkron_rak_ke_lokal({type: type});
 		});
