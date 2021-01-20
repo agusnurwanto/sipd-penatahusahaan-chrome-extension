@@ -24,14 +24,21 @@ jQuery(document).ready(function(){
 			var val = jQuery(this).val();
 			jQuery('#email').val(val);
 		});
-	}else if(current_url.indexOf('siap/rak-belanja/rak-detil/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1){
+	}else if(
+		current_url.indexOf('siap/rak-belanja/rak-detil/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
+		|| current_url.indexOf('siap/rak-pendapatan/list/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
+	){
 		var tombol_singkron = ''
 			+'<div class="col-md-3 col-xs-12">'
 				+'<button class="fcbtn btn btn-danger btn-outline btn-1b" id="singkron_rak_ke_lokal"><i class="fa fa-cloud-download m-r-5"></i> <span>Singkron RAK ke DB lokal</span></button>'
 			+'</div>';
 		jQuery('.panel.panel-primary').closest('.row').append(tombol_singkron);
 		jQuery('#singkron_rak_ke_lokal').on('click', function(){
-			singkron_rak_ke_lokal();
+			var type = 'belanja';
+			if(current_url.indexOf('siap/rak-pendapatan/list/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1){
+				type = 'pendapatan';
+			}
+			singkron_rak_ke_lokal({type: type});
 		});
 	}else if(current_url.indexOf('siap/rak-belanja/list/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1){
 		var tombol_singkron = ''

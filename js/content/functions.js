@@ -392,7 +392,8 @@ function singkron_rak_ke_lokal_all(){
                 		id_sub_skpd = val.id_skpd;
                 	}
                 	singkron_rak_ke_lokal({
-                		kode_sbl: val.id_skpd+'.'+id_sub_skpd+'.'+val.id_bidang_urusan+'.'+val.id_program+'.'+val.id_giat+'.'+val.id_sub_giat
+                		kode_sbl: val.id_skpd+'.'+id_sub_skpd+'.'+val.id_bidang_urusan+'.'+val.id_program+'.'+val.id_giat+'.'+val.id_sub_giat,
+                		type: 'belanja'
                 	}, function(detil){
                 		val.detil = detil;
                 		return resolve(val);
@@ -422,15 +423,23 @@ function singkron_rak_ke_lokal(opsi, callback){
 	if(opsi && opsi.kode_sbl){
 		kode_sbl = opsi.kode_sbl;
 	}else{
-		kode_sbl = get_kode_sbl();
+		if(opsi.type == 'belanja'){
+			kode_sbl = get_kode_sbl();
+		}
 		jQuery('#wrap-loading').show();
 	}
-	if(!kode_sbl){
+	if(!kode_sbl && opsi.type=='belanja'){
 		return alert('kodesbl tidak ditemukan!')
 	}else{
 		var id_skpd = getIdSkpd();
+		var url_rak = '';
+		if(opsi.type == 'belanja'){
+			url_rak = config.sipd_url+'siap/rak-belanja/tampil-rincian/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd+'?kodesbl='+kode_sbl;
+		}else if(opsi.type == 'pendapatan'){
+			url_rak = config.sipd_url+'siap/rak-pendapatan/tampil-pendapatan/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd;
+		}
 		jQuery.ajax({
-			url: config.sipd_url+'siap/rak-belanja/tampil-rincian/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd+'?kodesbl='+kode_sbl,
+			url: url_rak,
 			type: 'get',
 			success: function(rak){
 				var data_rak = { 
@@ -438,6 +447,7 @@ function singkron_rak_ke_lokal(opsi, callback){
 					tahun_anggaran: config.tahun_anggaran,
 					api_key: config.api_key,
 					kode_sbl: kode_sbl,
+					type: opsi.type,
 					data: {}
 				};
 				rak.data.map(function(b, i){
