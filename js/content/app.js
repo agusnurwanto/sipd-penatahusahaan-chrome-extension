@@ -46,6 +46,23 @@ jQuery(document).ready(function(){
 			}
 			singkron_rak_ke_lokal({type: type});
 		});
+	}else if(current_url.indexOf('/siap/skkdh') != -1){
+		var tombol_load = ''
+			+'<li class="pull-right"><button class="fcbtn btn btn-danger btn-outline btn-1b" id="load_up_lokal"><i class="fa fa-cloud-upload m-r-5"></i> <span>Load UP Lokal</span></button></li>';
+		jQuery('ul.breadcrumb').append(tombol_load);
+		jQuery('#load_up_lokal').on('click', function(){
+			load_up_lokal();
+		});
+
+		setTimeout(function(){
+			var tombol_load2 = ''
+				+'<a class="fcbtn btn btn-danger btn-outline btn-1b" id="load_up_lokal2" href="#"><i class="fa fa-cloud-upload m-r-5"></i> <span>Load UP Lokal</span></a>';
+			jQuery('#btnSubmitSkkdh').after(tombol_load2);
+			jQuery('#load_up_lokal2').on('click', function(){
+				load_up_lokal(jQuery('.edit-skkdh form .form-group').eq(0).find('.ng-binding').text());
+				return false;
+			});
+		}, 1000);
 	}else if(current_url.indexOf('siap/rak-belanja/list/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1){
 		var tombol_singkron = ''
 			+'<button class="fcbtn btn btn-danger btn-outline btn-1b pull-right" id="singkron_rak_ke_lokal" style="margin-right: 20px;"><i class="fa fa-cloud-download m-r-5"></i> <span>Singkron RAK ke DB lokal</span></button>';

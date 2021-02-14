@@ -508,3 +508,79 @@ function singkron_rak_ke_lokal(opsi, callback){
 		})
 	}
 }
+
+function load_up_lokal(nama_skpd){
+	if(typeof up_all == 'undefined'){
+		if(nama_skpd){
+			alert('Data diload dulu dari lokal. Setelah selesai klik tombol "Load UP Lokal" lagi!');
+		}
+		jQuery('#wrap-loading').show();
+		var data_up = { 
+			action: 'get_up',
+			tahun_anggaran: config.tahun_anggaran,
+			api_key: config.api_key
+		};
+		var data_back = {
+		    message:{
+		        type: "get-url",
+		        content: {
+				    url: config.url_server_lokal,
+				    type: 'post',
+				    data: data_up,
+	    			return: true
+				}
+		    }
+		};
+		chrome.runtime.sendMessage(data_back, function(response) {
+		    console.log('responeMessage', response);
+		});
+	}else{
+		set_up();
+		// console.log('nama_skpd', nama_skpd);
+		if(nama_skpd){
+			up_all.map(function(val, key){
+				if(val.mapping.nama_skpd == nama_skpd){
+					var nilai_up = 0;
+					val.rinc.map(function(d, n){
+						nilai_up += +d.nilai;
+					})
+					jQuery('.edit-skkdh form .form-group input').val(formatMoney(nilai_up,0,0,'.'));
+				}
+			})
+		}
+	}
+}
+
+function set_up(nama_skpd){
+	jQuery('#tab-skkdh table.table-sp2d > tbody > tr').map(function(i, b){
+		var td = jQuery(b).find('td');
+		var opd = td.eq(1).text().trim();
+		var info = '';
+		up_all.map(function(val, key){
+			if(val.mapping.nama_skpd == opd){
+				var nilai_up = 0;
+				val.rinc.map(function(d, n){
+					nilai_up += +d.nilai;
+				})
+				info = '<br>(NO SPP="'+up_all[i].no_spp+'" Nilai="'+'Rp '+formatMoney(nilai_up,0,0,'.')+'")';
+			}
+		})
+		td.eq(1).append(info);
+	});
+}
+
+function save_up(){
+	jQuery.ajax({
+		url: config.sipd_url+'siap/edit/skkdh',
+		type: 'post',
+		data: {
+			nilaiBesaranUp: 0,
+			idBesaranUp: 0,
+			idSkpd: 0,
+			idDaerah: config.id_daerah
+		},
+		success: function(res){
+
+		}
+	});
+}

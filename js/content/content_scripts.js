@@ -51,6 +51,9 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 				window.allUnitSCE = res.data[0];
 				get_unit(allUnitSCE); // promise resolve
 			}
+		}else if(res.action && res.action=='get_up'){
+			window.up_all = res.data;
+			set_up();
 		}else if(res.action && res.action=='get_kas'){
 			var rak = jQuery('table[class="tabel-standar"]');
 			var tr = rak.eq(rak.length-2).find('>tbody>tr');
