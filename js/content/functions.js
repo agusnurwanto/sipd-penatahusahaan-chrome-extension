@@ -570,17 +570,63 @@ function set_up(){
 }
 
 function save_up(){
-	jQuery.ajax({
-		url: config.sipd_url+'siap/edit/skkdh',
-		type: 'post',
-		data: {
-			nilaiBesaranUp: 0,
-			idBesaranUp: 0,
-			idSkpd: 0,
-			idDaerah: config.id_daerah
-		},
-		success: function(res){
-
-		}
-	});
+	if(typeof up_all == 'undefined'){
+		alert('Data diload dulu dari lokal. Setelah selesai klik tombol "Save UP Lokal" lagi!');
+		load_up_lokal();
+	}else{
+		jQuery('#wrap-loading').show();
+		jQuery.ajax({
+			url: config.sipd_url+'siap/data/besaran-up-skpd',
+			type: 'get',
+			success: function(up){
+				var sendData = up.data.map(function(b, i){
+                	return new Promise(function(resolve, reject){
+                		var cek_up_lokal = true;
+						up_all.map(function(val, key){
+							if(val.mapping && (val.mapping.id_skpd == b.idSkpd)){
+								cek_up_lokal = false;
+								var nilai_up = 0;
+								val.rinc.map(function(d, n){
+									nilai_up += +d.nilai;
+								});
+								var idBesaranUp = '';
+								if(!b.id_besaran_up){
+									idBesaranUp = b.id_besaran_up;
+									return resolve();
+								}else{
+									jQuery.ajax({
+										url: config.sipd_url+'siap/edit/skkdh',
+										type: 'post',
+										data: {
+											nilaiMaksimal: nilai_up,
+											nilaiBesaranUp: nilai_up,
+											idBesaranUp: idBesaranUp,
+											idSkpd: b.idSkpd,
+											idDaerah: config.id_daerah
+										},
+										success: function(res){
+											return resolve();
+										}
+									});
+								}
+							}
+						});
+						if(cek_up_lokal){
+							return resolve();
+						}
+					});
+				});
+				Promise.all(sendData)
+	        	.then(function(val_all){
+	        		alert('Berhasil Simpan Data UP Lokal');
+	        		jQuery('#wrap-loading').hide();
+	            })
+	            .catch(function(err){
+	                console.log('err', err);
+	        		alert('Ada kesalahan sistem!');
+	        		jQuery('#wrap-loading').hide();
+	            });
+			}
+		});
+	}
 }
