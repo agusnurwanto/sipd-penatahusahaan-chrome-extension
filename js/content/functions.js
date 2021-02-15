@@ -539,7 +539,7 @@ function load_up_lokal(nama_skpd){
 		// console.log('nama_skpd', nama_skpd);
 		if(nama_skpd){
 			up_all.map(function(val, key){
-				if(val.mapping.nama_skpd == nama_skpd){
+				if(val.mapping && (val.mapping.nama_skpd == nama_skpd)){
 					var nilai_up = 0;
 					val.rinc.map(function(d, n){
 						nilai_up += +d.nilai;
