@@ -13,6 +13,8 @@ Semoga bermanfaat
 - Memampilkan indikator DPA dari data RKA
 - Edit manual indikator DPA
 - Menampilkan anggaran kas di DPA
+- Load data UP dari aplikasi lokal
+- Save UP Lokal by script
 
 ### Pengembangan berikutnya:
 - Melengkapi dokumentasi penggunaan di halaman wiki
@@ -25,3 +27,33 @@ Semoga bermanfaat
 ### Istilah di Aplikasi Penatausahaan
 - Surat Penyediaan Dana yang selanjutnya disingkat SPD adalah dokumen yang menyatakan tersedianya dana untuk melaksanakan kegiatan sebagai dasar penerbitan SPP (Surat Permintaan Pembayaran).
 - Surat Perintah Membayar Langsung, yang selanjutnya disingkat SPM-LS, adalah SPM langsung kepada Bendahara Pengeluaran/Penerima Hak yang diterbitkan oleh PA/KPA atau pejabat lain yang ditunjuk atas dasar kontrak kerja, surat keputusan, surat tugas atau surat perintah kerja lainnya.
+- Catatan dari manual book SIPD Penatausahaan https://agusnurwantomuslim.blogspot.com/2021/02/sipd-penatausahaan-kemendagri.html
+
+### Catatan
+- Untuk melihat data besaran UP di SIPD penatausahaan.
+```
+jQuery.ajax({
+	url: config.sipd_url+'siap/data/besaran-up-skpd',
+	type: 'get',
+	success: function(res){
+		console.log(res);
+	}
+});
+```
+- Untuk mengedit nilai besaran UP ketika salah input.
+```
+jQuery.ajax({
+	url: config.sipd_url+'siap/edit/skkdh',
+	type: 'post',
+	data: {
+		nilaiMaksimal: 0, // dibuat sama dengan nilau UP saja
+		nilaiBesaranUp: 0, // nilai besaran UP
+		idBesaranUp: 0, // ID yang didapat dari config.sipd_url+'siap/data/besaran-up-skpd'
+		idSkpd: 0, //  ID yang didapat dari config.sipd_url+'siap/data/besaran-up-skpd'
+		idDaerah: config.id_daerah
+	},
+	success: function(res){
+		alert('Berhasil');
+	}
+});
+```
