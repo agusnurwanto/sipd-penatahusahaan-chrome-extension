@@ -551,20 +551,20 @@ function load_up_lokal(nama_skpd){
 	}
 }
 
-function set_up(nama_skpd){
+function set_up(){
 	jQuery('#tab-skkdh table.table-sp2d > tbody > tr').map(function(i, b){
 		var td = jQuery(b).find('td');
 		var opd = td.eq(1).text().trim();
 		var info = '';
 		up_all.map(function(val, key){
-			if(val.mapping.nama_skpd == opd){
+			if(val.mapping && (val.mapping.nama_skpd == opd)){
 				var nilai_up = 0;
 				val.rinc.map(function(d, n){
 					nilai_up += +d.nilai;
 				})
 				info = '<br>(NO SPP="'+up_all[i].no_spp+'" Nilai="'+'Rp '+formatMoney(nilai_up,0,0,'.')+'")';
 			}
-		})
+		});
 		td.eq(1).append(info);
 	});
 }
