@@ -591,9 +591,6 @@ function save_up(){
 								});
 								var idBesaranUp = '';
 								if(!b.id_besaran_up){
-									idBesaranUp = b.id_besaran_up;
-									return resolve();
-								}else{
 									jQuery.ajax({
 										url: config.sipd_url+'siap/edit/skkdh',
 										type: 'post',
@@ -608,6 +605,9 @@ function save_up(){
 											return resolve();
 										}
 									});
+								}else{
+									idBesaranUp = b.id_besaran_up;
+									return resolve();
 								}
 							}
 						});
