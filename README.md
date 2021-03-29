@@ -57,3 +57,18 @@ jQuery.ajax({
 	}
 });
 ```
+- Untuk menambah SPD kirim request post ke ```config.sipd_url+'siap/spd/tambah'```
+- Untuk membuat SPTJM SPM request post ke ```config.sipd_url+'siap/spm/tambah-sptjm'```
+```
+{
+	"nomorSpm":"xxxxx",
+	"tanggalSpm":"yyyy-mm-dd",
+	"nilaiSpm":"xxxx",
+	"id_spm":xxx,
+	"id_jadwal":xxx,
+	"id_tahap":xxx,
+	"status_tahap":"xxx",
+	"nomor_sptjm":"xxxxx",
+	"tanggal_sptjm":"dd/mm/yyyy"
+}
+```
