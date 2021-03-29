@@ -218,8 +218,35 @@ function get_kode_skpd_laporan(no_dpa){
 }
 
 function get_id_skpd_laporan(current_url){
-	current_url = current_url.split('?')[0].split('/');
-	return current_url[current_url.length-1];
+	return new Promise(function(resolve, reject){
+		var no_eq = 0;
+		var cek_no_dpa =jQuery('table.tabel-standar').eq(2).find('>tbody>tr>td').eq(0).text().trim();
+		if(cek_no_dpa == 'Nomor DPA'){
+			no_eq = 1;
+		}
+		var kode_skpd = get_kode_skpd_laporan(no_eq);
+		var data_skpd = { 
+			action: 'get_unit',
+			tahun_anggaran: config.tahun_anggaran,
+			api_key: config.api_key,
+			kode_skpd: kode_skpd
+		};
+		var data_back = {
+		    message:{
+		        type: "get-url",
+		        content: {
+				    url: config.url_server_lokal,
+				    type: 'post',
+				    data: data_skpd,
+	    			return: true
+				}
+		    }
+		};
+		chrome.runtime.sendMessage(data_back, function(response) {
+		    console.log('responeMessage', response);
+		});
+		window.get_unit = resolve;
+	});
 }
 
 function capitalizeFirstLetter(string) {
@@ -375,7 +402,9 @@ function get_kode_sbl(){
 }
 
 function getIdSkpd(){
-	return window.location.href.split('?')[0].split(''+config.id_daerah+'/')[1];
+	var s = jQuery('script');
+	var kd = s.eq(s.length-1).html().split('main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/')[1].split("'")[0];
+	return kd;
 }
 
 function singkron_rak_ke_lokal_all(){

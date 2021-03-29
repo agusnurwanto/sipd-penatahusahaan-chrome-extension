@@ -15,6 +15,7 @@ Semoga bermanfaat
 - Menampilkan anggaran kas di DPA
 - Load data UP dari aplikasi lokal
 - Save UP Lokal by script
+- Perbaikan script singkron RAK setelah ada update di SIPD
 
 ### Pengembangan berikutnya:
 - Melengkapi dokumentasi penggunaan di halaman wiki

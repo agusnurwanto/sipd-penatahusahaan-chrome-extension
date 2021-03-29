@@ -49,7 +49,7 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 		        	+'</div>';
 				jQuery('app-input-text[ng-model="formTambah.skpd.namaSkpd"]').parent().after(input);
 				window.allUnitSCE = res.data[0];
-				get_unit(allUnitSCE); // promise resolve
+				get_unit(allUnitSCE); // promise resolve global variable
 			}
 		}else if(res.action && res.action=='get_up'){
 			window.up_all = res.data;
@@ -139,6 +139,9 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 			}
 		}else{
 			alert(res.message);
+		}
+		if(res.resolve){
+			res.resolve(res.data);
 		}
 		jQuery('#wrap-loading').hide();
 		jQuery('#persen-loading').html('');

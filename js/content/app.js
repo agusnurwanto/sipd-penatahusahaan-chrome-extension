@@ -25,10 +25,9 @@ jQuery(document).ready(function(){
 			jQuery('#email').val(val);
 		});
 	}else if(
-		current_url.indexOf('siap/rak-belanja/rak-detil/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
-		|| current_url.indexOf('siap/rak-pendapatan/list/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
-		|| current_url.indexOf('siap/rak-pembiayaan/list/penerimaan/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
-		|| current_url.indexOf('siap/rak-pembiayaan/list/pengeluaran/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
+		current_url.indexOf('siap/rak-belanja/rak-detil') != -1
+		|| current_url.indexOf('siap/rak-pendapatan/list') != -1
+		|| current_url.indexOf('siap/rak-pembiayaan/list') != -1
 	){
 		var tombol_singkron = ''
 			+'<div class="col-md-3 col-xs-12">'
@@ -37,11 +36,11 @@ jQuery(document).ready(function(){
 		jQuery('.panel.panel-primary').closest('.row').append(tombol_singkron);
 		jQuery('#singkron_rak_ke_lokal').on('click', function(){
 			var type = 'belanja';
-			if(current_url.indexOf('siap/rak-pendapatan/list/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1){
+			if(current_url.indexOf('siap/rak-pendapatan/list') != -1){
 				type = 'pendapatan';
-			}else if(current_url.indexOf('siap/rak-pembiayaan/list/penerimaan/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1){
+			}else if(jQuery('input[name="rek"]').val() == 'penerimaan'){
 				type = 'pembiayaan-penerimaan';
-			}else if(current_url.indexOf('siap/rak-pembiayaan/list/pengeluaran/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1){
+			}else if(jQuery('input[name="rek"]').val() == 'pengeluaran'){
 				type = 'pembiayaan-pengeluaran';
 			}
 			singkron_rak_ke_lokal({type: type});
@@ -67,7 +66,7 @@ jQuery(document).ready(function(){
 				return false;
 			});
 		}, 1000);
-	}else if(current_url.indexOf('siap/rak-belanja/list/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1){
+	}else if(current_url.indexOf('siap/rak-belanja/list') != -1){
 		var tombol_singkron = ''
 			+'<button class="fcbtn btn btn-danger btn-outline btn-1b pull-right" id="singkron_rak_ke_lokal" style="margin-right: 20px;"><i class="fa fa-cloud-download m-r-5"></i> <span>Singkron RAK ke DB lokal</span></button>';
 		jQuery('a.btn-circle.pull-right').after(tombol_singkron);
@@ -75,7 +74,7 @@ jQuery(document).ready(function(){
 			singkron_rak_ke_lokal_all();
 		});
 	}else if(
-		current_url.indexOf('siap/dpa-bl-rinci/cetak/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
+		current_url.indexOf('siap/dpa-bl-rinci/cetak') != -1
 		|| current_url.indexOf('siap/dpa-biaya/cetak/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
 		|| current_url.indexOf('siap/dpa-bl/cetak/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
 		|| current_url.indexOf('siap/dpa-penda/cetak/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
@@ -129,30 +128,134 @@ jQuery(document).ready(function(){
 			+'<label style="'+display+'"><input type="radio" id="edit_ind"> Edit indikator Manual</label>'
 			+'<label><input type="radio" id="load_kas"> Munculkan Anggaran Kas DB Lokal</label>';
 		jQuery('#action-sipd').append(button_ind);
-		var id_skpd = get_id_skpd_laporan(current_url);
-		jQuery('#wrap-loading').show();
-		var data_ind = { 
-			action: 'get_all_sub_unit',
-			tahun_anggaran: config.tahun_anggaran,
-			api_key: config.api_key,
-			id_skpd: id_skpd
-		};
-		var data_back = {
-		    message:{
-		        type: "get-url",
-		        content: {
-				    url: config.url_server_lokal,
-				    type: 'post',
-				    data: data_ind,
-	    			return: true
+		get_id_skpd_laporan(current_url).then(function(skpd){
+			id_skpd = skpd.id_skpd;
+			jQuery('#wrap-loading').show();
+			var data_ind = { 
+				action: 'get_all_sub_unit',
+				tahun_anggaran: config.tahun_anggaran,
+				api_key: config.api_key,
+				id_skpd: id_skpd
+			};
+			var data_back = {
+			    message:{
+			        type: "get-url",
+			        content: {
+					    url: config.url_server_lokal,
+					    type: 'post',
+					    data: data_ind,
+		    			return: true
+					}
+			    }
+			};
+			chrome.runtime.sendMessage(data_back, function(response) {
+			    console.log('responeMessage', response);
+			});
+			jQuery('#load_kas').on('click', function(){
+				if(confirm('Data Anggaran Kas akan diupdate sesuai dengan data di database lokal!')){
+					var no_eq = 0;
+					var cek_no_dpa =jQuery('table.tabel-standar').eq(2).find('>tbody>tr>td').eq(0).text().trim();
+					if(cek_no_dpa == 'Nomor DPA'){
+						no_eq = 1;
+					}
+					var kode_giat = get_kode_giat_laporan(no_eq);
+					var kode_skpd = get_kode_skpd_laporan(no_eq);
+					jQuery('#wrap-loading').show();
+					var data_ind = { 
+						action: 'get_kas',
+						tahun_anggaran: config.tahun_anggaran,
+						api_key: config.api_key,
+						kode_giat: kode_giat,
+						kode_skpd: kode_skpd
+					};
+					var data_back = {
+					    message:{
+					        type: "get-url",
+					        content: {
+							    url: config.url_server_lokal,
+							    type: 'post',
+							    data: data_ind,
+				    			return: true
+							}
+					    }
+					};
+					chrome.runtime.sendMessage(data_back, function(response) {
+					    console.log('responeMessage', response);
+					});
+					console.log('kode_giat', kode_giat);
+				}else{
+					jQuery('#load_kas').prop('checked', false);
 				}
-		    }
-		};
-		chrome.runtime.sendMessage(data_back, function(response) {
-		    console.log('responeMessage', response);
-		});
-		jQuery('#load_kas').on('click', function(){
-			if(confirm('Data Anggaran Kas akan diupdate sesuai dengan data di database lokal!')){
+			});
+			jQuery('#pilih_skpd').on('change', function(){
+				var val = jQuery(this).val();
+				if(val != ''){
+					window.location.href = current_url.replace('/'+id_skpd+'?','/'+val+'?');
+				}
+			});
+			jQuery('#edit_ind').on('click', function(){
+				alert('Silahkan klik pada kolom indikator yang masih kosong untuk melakukan edit!');
+
+				var no_eq = 0;
+				var cek_no_dpa =jQuery('table.tabel-standar').eq(2).find('>tbody>tr>td').eq(0).text().trim();
+				if(cek_no_dpa == 'Nomor DPA'){
+					no_eq = 1;
+				}
+
+				var sasaran_program = jQuery('table.tabel-standar[cellpadding="4"]').eq(4+no_eq).find('td').eq(2);
+				sasaran_program.attr('contenteditable', true);
+				
+				var ind_prog = jQuery('table.tabel-standar').eq(7+no_eq).find('>tbody');
+				ind_prog.attr('contenteditable', true);
+
+				var capaian_kegiatan = jQuery('table.tabel-standar').eq(15+no_eq).find('>tbody');
+				capaian_kegiatan.attr('contenteditable', true);
+
+				var target_capaian_kegiatan = jQuery('table.tabel-standar').eq(16+no_eq).find('>tbody');
+				target_capaian_kegiatan.attr('contenteditable', true);
+
+				var keluaran_kegiatan = jQuery('table.tabel-standar').eq(19+no_eq).find('>tbody');
+				keluaran_kegiatan.attr('contenteditable', true);
+
+				var target_keluaran_kegiatan = jQuery('table.tabel-standar').eq(20+no_eq).find('>tbody');
+				target_keluaran_kegiatan.attr('contenteditable', true);
+
+				var hasil_kegiatan = jQuery('table.tabel-standar').eq(21+no_eq);
+				if(hasil_kegiatan.find('tr').length == 0){
+					hasil_kegiatan.append('<tr><td contenteditable="true"></td></tr>');
+				}else{
+					hasil_kegiatan.find('tr>td').attr('contenteditable', true);
+				}
+
+				var target_hasil_kegiatan = jQuery('table.tabel-standar').eq(22+no_eq);
+				if(target_hasil_kegiatan.find('tr').length == 0){
+					target_hasil_kegiatan.append('<tr><td contenteditable="true"></td></tr>');
+				}else{
+					target_hasil_kegiatan.find('tr>td').attr('contenteditable', true);
+				}
+
+				var kelompok_sasaran = jQuery('#rka>tbody>tr').eq(15+no_eq).find('td');
+				kelompok_sasaran.attr('contenteditable', true);
+
+				var rak = jQuery('table[class="tabel-standar"]');
+				rak.eq(rak.length-2).find('>tbody').attr('contenteditable', true);
+
+				if(config.manual_indikator_sub_keg){
+					jQuery('.cetak>table.tabel-standar[cellpadding="4"]').map(function(i, b){
+						if(i%2 != 0){
+							return;
+						}
+						var eq_1 = 5;
+						if(i==0){
+							eq_1 = 4;
+						}
+						jQuery(b).find('>tbody>tr').eq(eq_1)
+							.find('.tabel-standar').eq(1)
+							.find('>tbody').attr('contenteditable', true);
+					});
+				}
+			});
+			jQuery('#load_ind').on('click', function(){
 				var no_eq = 0;
 				var cek_no_dpa =jQuery('table.tabel-standar').eq(2).find('>tbody>tr>td').eq(0).text().trim();
 				if(cek_no_dpa == 'Nomor DPA'){
@@ -162,7 +265,7 @@ jQuery(document).ready(function(){
 				var kode_skpd = get_kode_skpd_laporan(no_eq);
 				jQuery('#wrap-loading').show();
 				var data_ind = { 
-					action: 'get_kas',
+					action: 'get_indikator',
 					tahun_anggaran: config.tahun_anggaran,
 					api_key: config.api_key,
 					kode_giat: kode_giat,
@@ -183,109 +286,7 @@ jQuery(document).ready(function(){
 				    console.log('responeMessage', response);
 				});
 				console.log('kode_giat', kode_giat);
-			}else{
-				jQuery('#load_kas').prop('checked', false);
-			}
-		});
-		jQuery('#pilih_skpd').on('change', function(){
-			var val = jQuery(this).val();
-			if(val != ''){
-				window.location.href = current_url.replace('/'+id_skpd+'?','/'+val+'?');
-			}
-		});
-		jQuery('#edit_ind').on('click', function(){
-			alert('Silahkan klik pada kolom indikator yang masih kosong untuk melakukan edit!');
-
-			var no_eq = 0;
-			var cek_no_dpa =jQuery('table.tabel-standar').eq(2).find('>tbody>tr>td').eq(0).text().trim();
-			if(cek_no_dpa == 'Nomor DPA'){
-				no_eq = 1;
-			}
-
-			var sasaran_program = jQuery('table.tabel-standar[cellpadding="4"]').eq(4+no_eq).find('td').eq(2);
-			sasaran_program.attr('contenteditable', true);
-			
-			var ind_prog = jQuery('table.tabel-standar').eq(7+no_eq).find('>tbody');
-			ind_prog.attr('contenteditable', true);
-
-			var capaian_kegiatan = jQuery('table.tabel-standar').eq(15+no_eq).find('>tbody');
-			capaian_kegiatan.attr('contenteditable', true);
-
-			var target_capaian_kegiatan = jQuery('table.tabel-standar').eq(16+no_eq).find('>tbody');
-			target_capaian_kegiatan.attr('contenteditable', true);
-
-			var keluaran_kegiatan = jQuery('table.tabel-standar').eq(19+no_eq).find('>tbody');
-			keluaran_kegiatan.attr('contenteditable', true);
-
-			var target_keluaran_kegiatan = jQuery('table.tabel-standar').eq(20+no_eq).find('>tbody');
-			target_keluaran_kegiatan.attr('contenteditable', true);
-
-			var hasil_kegiatan = jQuery('table.tabel-standar').eq(21+no_eq);
-			if(hasil_kegiatan.find('tr').length == 0){
-				hasil_kegiatan.append('<tr><td contenteditable="true"></td></tr>');
-			}else{
-				hasil_kegiatan.find('tr>td').attr('contenteditable', true);
-			}
-
-			var target_hasil_kegiatan = jQuery('table.tabel-standar').eq(22+no_eq);
-			if(target_hasil_kegiatan.find('tr').length == 0){
-				target_hasil_kegiatan.append('<tr><td contenteditable="true"></td></tr>');
-			}else{
-				target_hasil_kegiatan.find('tr>td').attr('contenteditable', true);
-			}
-
-			var kelompok_sasaran = jQuery('#rka>tbody>tr').eq(15+no_eq).find('td');
-			kelompok_sasaran.attr('contenteditable', true);
-
-			var rak = jQuery('table[class="tabel-standar"]');
-			rak.eq(rak.length-2).find('>tbody').attr('contenteditable', true);
-
-			if(config.manual_indikator_sub_keg){
-				jQuery('.cetak>table.tabel-standar[cellpadding="4"]').map(function(i, b){
-					if(i%2 != 0){
-						return;
-					}
-					var eq_1 = 5;
-					if(i==0){
-						eq_1 = 4;
-					}
-					jQuery(b).find('>tbody>tr').eq(eq_1)
-						.find('.tabel-standar').eq(1)
-						.find('>tbody').attr('contenteditable', true);
-				});
-			}
-		});
-		jQuery('#load_ind').on('click', function(){
-			var no_eq = 0;
-			var cek_no_dpa =jQuery('table.tabel-standar').eq(2).find('>tbody>tr>td').eq(0).text().trim();
-			if(cek_no_dpa == 'Nomor DPA'){
-				no_eq = 1;
-			}
-			var kode_giat = get_kode_giat_laporan(no_eq);
-			var kode_skpd = get_kode_skpd_laporan(no_eq);
-			jQuery('#wrap-loading').show();
-			var data_ind = { 
-				action: 'get_indikator',
-				tahun_anggaran: config.tahun_anggaran,
-				api_key: config.api_key,
-				kode_giat: kode_giat,
-				kode_skpd: kode_skpd
-			};
-			var data_back = {
-			    message:{
-			        type: "get-url",
-			        content: {
-					    url: config.url_server_lokal,
-					    type: 'post',
-					    data: data_ind,
-		    			return: true
-					}
-			    }
-			};
-			chrome.runtime.sendMessage(data_back, function(response) {
-			    console.log('responeMessage', response);
 			});
-			console.log('kode_giat', kode_giat);
 		});
 	}else if(current_url.indexOf('/siap/kelola-user') != -1){
 		getUser(idUser()).then(function(skpd){

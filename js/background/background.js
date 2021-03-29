@@ -82,6 +82,9 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 			     		type: 'response-fecth-url',
 			     		data: ret
 			     	}
+			     	if(request.message.content.resolve){
+			     		options.resolve = resolve;
+			     	}
 			     	sendMessageTabActive(options);
 			    }
 		        // console.log(ret, request.message.content);
