@@ -196,6 +196,11 @@ jQuery(document).ready(function(){
 					no_eq = 1;
 				}
 
+				var cek_tahapan = 'murni';
+				if(jQuery('table.tabel-standar').eq(1).find('td').eq(1).text().indexOf('DPPA') != -1){
+					cek_tahapan = 'pergeseran';
+				}
+
 				var sasaran_program = jQuery('table.tabel-standar[cellpadding="4"]').eq(4+no_eq).find('td').eq(2);
 				sasaran_program.attr('contenteditable', true);
 				
@@ -228,6 +233,46 @@ jQuery(document).ready(function(){
 					target_hasil_kegiatan.find('tr>td').attr('contenteditable', true);
 				}
 
+				if(cek_tahapan == 'pergeseran'){
+					var capaian_kegiatan_p = jQuery('table.tabel-standar').eq(17+no_eq).find('>tbody');
+					capaian_kegiatan_p.attr('contenteditable', true);
+
+					var t_capaian_kegiatan_p = jQuery('table.tabel-standar').eq(18+no_eq).find('>tbody');
+					t_capaian_kegiatan_p.attr('contenteditable', true);
+
+					var keluaran_kegiatan = jQuery('table.tabel-standar').eq(23+no_eq).find('>tbody');
+					keluaran_kegiatan.attr('contenteditable', true);
+
+					var t_keluaran_kegiatan = jQuery('table.tabel-standar').eq(24+no_eq).find('>tbody');
+					t_keluaran_kegiatan.attr('contenteditable', true);
+
+					var keluaran_kegiatan_p = jQuery('table.tabel-standar').eq(25+no_eq).find('>tbody');
+					keluaran_kegiatan_p.attr('contenteditable', true);
+
+					var t_keluaran_kegiatan_p = jQuery('table.tabel-standar').eq(26+no_eq).find('>tbody');
+					t_keluaran_kegiatan_p.attr('contenteditable', true);
+
+					var hasil_kegiatan = jQuery('table.tabel-standar').eq(27+no_eq);
+					if(hasil_kegiatan.find('tr').length == 0){
+						hasil_kegiatan.append('<tbody contenteditable="true"><tr><td style=" mso-number-format:\@;"></td></tr></tbody>');
+					}else{
+						hasil_kegiatan.find('>tbody').attr('contenteditable', true);
+					}
+
+					var t_hasil_kegiatan = jQuery('table.tabel-standar').eq(28+no_eq);
+					if(t_hasil_kegiatan.find('tr').length == 0){
+						t_hasil_kegiatan.append('<tbody contenteditable="true"><tr><td style=" mso-number-format:\@;"></td></tr></tbody>');
+					}else{
+						t_hasil_kegiatan.find('>tbody').attr('contenteditable', true);
+					}
+
+					var hasil_kegiatan_p = jQuery('table.tabel-standar').eq(29+no_eq).find('>tbody');
+					hasil_kegiatan_p.attr('contenteditable', true);
+
+					var t_hasil_kegiatan_p = jQuery('table.tabel-standar').eq(30+no_eq).find('>tbody');
+					t_hasil_kegiatan_p.attr('contenteditable', true);
+				}
+
 				var kelompok_sasaran = jQuery('#rka>tbody>tr').eq(15+no_eq).find('td');
 				kelompok_sasaran.attr('contenteditable', true);
 
@@ -240,9 +285,16 @@ jQuery(document).ready(function(){
 						if(i%2 != 0){
 							return;
 						}
-						var eq_1 = 5;
-						if(i==0){
-							eq_1 = 4;
+						if(cek_tahapan == 'pergeseran'){
+							var eq_1 = 4;
+							if(i==0){
+								eq_1 = 3;
+							}
+						}else{
+							var eq_1 = 5;
+							if(i==0){
+								eq_1 = 4;
+							}
 						}
 						jQuery(b).find('>tbody>tr').eq(eq_1)
 							.find('.tabel-standar').eq(1)
