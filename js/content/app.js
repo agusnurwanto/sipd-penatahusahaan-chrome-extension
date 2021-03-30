@@ -75,27 +75,17 @@ jQuery(document).ready(function(){
 		});
 	}else if(
 		current_url.indexOf('siap/dpa-bl-rinci/cetak') != -1
-		|| current_url.indexOf('siap/dpa-biaya/cetak/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
-		|| current_url.indexOf('siap/dpa-bl/cetak/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
-		|| current_url.indexOf('siap/dpa-penda/cetak/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
-		|| current_url.indexOf('siap/dpa-skpd/cetak/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/') != -1
+		|| current_url.indexOf('siap/dpa-biaya/cetak') != -1
+		|| current_url.indexOf('siap/dpa-bl/cetak') != -1
+		|| current_url.indexOf('siap/dpa-penda/cetak') != -1
+		|| current_url.indexOf('siap/dpa-skpd/cetak') != -1
 	){
 		injectScript( chrome.extension.getURL('/js/jquery.min.js'), 'html');
 
 		var cek_no_dpa =jQuery('table.tabel-standar').eq(2).find('>tbody>tr>td').eq(0).text().trim();
 		if(cek_no_dpa == 'Nomor DPA'){
 			if(config.nip_ppkd){
-				jQuery('.text-merah.text_blok.text_20').hide();
-				var ttd_ppkd = ''
-					+'<tr><td class="text_tengah"><br>Mengesahkan,</td></tr>'
-					+'<tr><td class="text_tengah" style="font-size: 110%; text-align: center; mso-number-format:\@;">PPKD</td></tr>'
-	                +'<tr><td height="80" style=" mso-number-format:\@;">&nbsp;</td></tr>'
-	                +'<tr><td class="text_tengah" style=" text-align: center; mso-number-format:\@;">'+config.nama_ppkd+'</td></tr>'
-	                +'<tr><td class="text_tengah" style=" text-align: center; mso-number-format:\@;">NIP. '+config.nip_ppkd+'</td></tr>';
-				var rak = jQuery('table[class="tabel-standar"]');
-				if(rak.eq(rak.length-2).find('>tbody .tabel-standar tbody>tr').eq(7).text() != 'PPKD'){
-					rak.eq(rak.length-2).find('>tbody .tabel-standar tbody').append(ttd_ppkd);
-				}
+				tambahTTDppkd();
 			}
 		}
 
@@ -125,7 +115,8 @@ jQuery(document).ready(function(){
 		var button_ind = ''
 			+'<select id="pilih_skpd" style="min-width: 200px; margin: 0 5px 0 10px; height: 30px;"><option value="">Ganti ID SKPD</option></select><br><br>'
 			+'<label><input type="radio" id="load_ind"> Munculkan indikator dari RKA DB Lokal</label>'
-			+'<label style="'+display+'"><input type="radio" id="edit_ind"> Edit indikator Manual</label>'
+			+'<label style="'+display+'"><input type="radio" id="edit_ind"> Edit (Indikator, Anggaran Kas & Tgl TTD)</label>'
+			+'<label><input type="radio" id="rm_draft"> Hapus Draft & input TTD PPKD</label>'
 			+'<label><input type="radio" id="load_kas"> Munculkan Anggaran Kas DB Lokal</label>';
 		jQuery('#action-sipd').append(button_ind);
 		get_id_skpd_laporan(current_url).then(function(skpd){
@@ -150,6 +141,9 @@ jQuery(document).ready(function(){
 			};
 			chrome.runtime.sendMessage(data_back, function(response) {
 			    console.log('responeMessage', response);
+			});
+			jQuery('#rm_draft').on('click', function(){
+				tambahTTDppkd();
 			});
 			jQuery('#load_kas').on('click', function(){
 				if(confirm('Data Anggaran Kas akan diupdate sesuai dengan data di database lokal!')){
@@ -238,7 +232,8 @@ jQuery(document).ready(function(){
 				kelompok_sasaran.attr('contenteditable', true);
 
 				var rak = jQuery('table[class="tabel-standar"]');
-				rak.eq(rak.length-2).find('>tbody').attr('contenteditable', true);
+				rak.eq(rak.length-3).find('>tbody').attr('contenteditable', true);
+				// rak.eq(rak.length-2).find('>tbody').attr('contenteditable', true);
 
 				if(config.manual_indikator_sub_keg){
 					jQuery('.cetak>table.tabel-standar[cellpadding="4"]').map(function(i, b){

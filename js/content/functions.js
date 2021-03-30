@@ -214,7 +214,11 @@ function get_kode_giat_laporan(no_dpa){
 }
 
 function get_kode_skpd_laporan(no_dpa){
-	return jQuery('table.tabel-standar[cellpadding="4"]').eq(8+no_dpa).find('td').eq(2).html().split('&nbsp;')[0];
+	if(jQuery('table.tabel-standar[cellpadding="4"]').eq(1).find('td').eq(0).text() == 'Organisasi'){
+		return jQuery('table.tabel-standar[cellpadding="4"]').eq(1).find('td').eq(2).html().split('&nbsp;')[0];
+	}else{
+		return jQuery('table.tabel-standar[cellpadding="4"]').eq(8+no_dpa).find('td').eq(2).html().split('&nbsp;')[0];
+	}
 }
 
 function get_id_skpd_laporan(current_url){
@@ -247,6 +251,21 @@ function get_id_skpd_laporan(current_url){
 		});
 		window.get_unit = resolve;
 	});
+}
+
+function tambahTTDppkd(){
+	jQuery('.text-merah.text_blok.text_20').hide();
+	var ttd_ppkd = ''
+		+'<tr><td class="text_tengah"><br>Mengesahkan,</td></tr>'
+		+'<tr><td class="text_tengah" style="font-size: 110%; text-align: center; mso-number-format:\@;">PPKD</td></tr>'
+        +'<tr><td height="80" style=" mso-number-format:\@;">&nbsp;</td></tr>'
+        +'<tr><td class="text_tengah" style=" text-align: center; mso-number-format:\@;">'+config.nama_ppkd+'</td></tr>'
+        +'<tr><td class="text_tengah" style=" text-align: center; mso-number-format:\@;">NIP. '+config.nip_ppkd+'</td></tr>';
+	var rak = jQuery('table[class="tabel-standar"]');
+	if(rak.eq(rak.length-2).find('>tbody .tabel-standar tbody>tr').eq(7).text() != 'PPKD'){
+		// rak.eq(rak.length-2).find('>tbody .tabel-standar tbody').append(ttd_ppkd);
+		rak.eq(rak.length-2).find('>tbody').append(ttd_ppkd);
+	}
 }
 
 function capitalizeFirstLetter(string) {
