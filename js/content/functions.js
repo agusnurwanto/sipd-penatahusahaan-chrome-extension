@@ -259,7 +259,7 @@ function tambahTTDppkd(){
 		+'<tr><td class="text_tengah"><br>Mengesahkan,</td></tr>'
 		+'<tr><td class="text_tengah" style="font-size: 110%; text-align: center; mso-number-format:\@;">PPKD</td></tr>'
         +'<tr><td height="80" style=" mso-number-format:\@;">&nbsp;</td></tr>'
-        +'<tr><td class="text_tengah" style=" text-align: center; mso-number-format:\@;">'+config.nama_ppkd+'</td></tr>'
+        +'<tr><td class="text_tengah" style=" text-align: center; mso-number-format:\@; text-decoration: underline;">'+config.nama_ppkd+'</td></tr>'
         +'<tr><td class="text_tengah" style=" text-align: center; mso-number-format:\@;">NIP. '+config.nip_ppkd+'</td></tr>';
 	var rak = jQuery('table[class="tabel-standar"]');
 	if(rak.eq(rak.length-2).find('>tbody .tabel-standar tbody>tr').eq(7).text() != 'PPKD'){
