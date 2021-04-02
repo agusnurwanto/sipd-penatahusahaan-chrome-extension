@@ -10,5 +10,6 @@ var config = {
 	nip_login : false, // menampilkan NIP kepala saat login
 	print_magic : false, // memisah tampilan print DPA per sub keg
 	nip_ppkd : false, // diisi dengan NIP PPKD penandatangan DPA untuk yang tidak muncul TTD PPKD, nilai default false
-	nama_ppkd : false // diisi dengan Nama PPKD penandatangan DPA untuk yang tidak muncul TTD PPKD, nilai default false
+	nama_ppkd : false, // diisi dengan Nama PPKD penandatangan DPA untuk yang tidak muncul TTD PPKD, nilai default false
+	no_dpa : 'DPPA/A.2/xxxxxx/001/2021' // nomor DPA custom
 };

@@ -216,6 +216,8 @@ function get_kode_giat_laporan(no_dpa){
 function get_kode_skpd_laporan(no_dpa){
 	if(jQuery('table.tabel-standar[cellpadding="4"]').eq(1).find('td').eq(0).text() == 'Organisasi'){
 		return jQuery('table.tabel-standar[cellpadding="4"]').eq(1).find('td').eq(2).html().split('&nbsp;')[0];
+	}else if(jQuery('table.tabel-standar[cellpadding="4"]').eq(2).find('td').eq(0).text() == 'Organisasi'){
+		return jQuery('table.tabel-standar[cellpadding="4"]').eq(2).find('td').eq(2).html().split('&nbsp;')[0];
 	}else{
 		return jQuery('table.tabel-standar[cellpadding="4"]').eq(8+no_dpa).find('td').eq(2).html().split('&nbsp;')[0];
 	}
@@ -254,6 +256,30 @@ function get_id_skpd_laporan(current_url){
 }
 
 function tambahTTDppkd(){
+	if(config.no_dpa){
+		var no_eq = 0;
+		var cek_no_dpa =jQuery('table.tabel-standar').eq(2).find('>tbody>tr>td').eq(0).text().trim();
+		if(cek_no_dpa == 'Nomor DPA'){
+			no_eq = 1;
+		}
+		if(no_eq == 0){
+			var html = ''
+				+'<tr>'
+					+'<td class="kiri atas kanan bawah" style=" border-bottom:1px solid #000; border-left:1px solid #000; border-right:1px solid #000; border-top:1px solid #000; mso-number-format:\@;">'
+                        +'<table class="tabel-standar" width="100%" cellpadding="4">'
+                            +'<tbody>'
+                            	+'<tr>'
+	                                +'<td width="100" style=" mso-number-format:\@;">No DPA</td>'
+	                                +'<td width="10" style=" mso-number-format:\@;">:</td>'
+	                                +'<td style=" mso-number-format:\@;">'+config.no_dpa+'</td>'
+	                            +'</tr>'
+                        	+'</tbody>'
+                        +'</table>'
+                    +'</td>'
+				+'</tr>';
+			jQuery('table.tabel-standar').eq(2).closest('tr').before(html);
+		}
+	}
 	jQuery('.text-merah.text_blok.text_20').hide();
 	var ttd_ppkd = ''
 		+'<tr><td class="text_tengah"><br>Mengesahkan,</td></tr>'
