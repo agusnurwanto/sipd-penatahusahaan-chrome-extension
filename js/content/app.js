@@ -266,11 +266,19 @@ jQuery(document).ready(function(){
 						t_hasil_kegiatan.find('>tbody').attr('contenteditable', true);
 					}
 
-					var hasil_kegiatan_p = jQuery('table.tabel-standar').eq(29+no_eq).find('>tbody');
-					hasil_kegiatan_p.attr('contenteditable', true);
+					var hasil_kegiatan_p = jQuery('table.tabel-standar').eq(29+no_eq);
+					if(hasil_kegiatan_p.find('tr').length == 0){
+						hasil_kegiatan_p.append('<tbody contenteditable="true"><tr><td style=" mso-number-format:\@;"></td></tr></tbody>');
+					}else{
+						hasil_kegiatan_p.find('>tbody').attr('contenteditable', true);
+					}
 
-					var t_hasil_kegiatan_p = jQuery('table.tabel-standar').eq(30+no_eq).find('>tbody');
-					t_hasil_kegiatan_p.attr('contenteditable', true);
+					var t_hasil_kegiatan_p = jQuery('table.tabel-standar').eq(30+no_eq);
+					if(t_hasil_kegiatan_p.find('tr').length == 0){
+						t_hasil_kegiatan_p.append('<tbody contenteditable="true"><tr><td style=" mso-number-format:\@;"></td></tr></tbody>');
+					}else{
+						t_hasil_kegiatan_p.find('>tbody').attr('contenteditable', true);
+					}
 				}
 
 				var kelompok_sasaran = jQuery('#rka>tbody>tr').eq(15+no_eq).find('td');

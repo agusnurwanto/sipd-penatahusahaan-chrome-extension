@@ -267,17 +267,15 @@ function tambahTTDppkd(){
 				+'<tr>'
 					+'<td class="kiri atas kanan bawah" style=" border-bottom:1px solid #000; border-left:1px solid #000; border-right:1px solid #000; border-top:1px solid #000; mso-number-format:\@;">'
                         +'<table class="tabel-standar" width="100%" cellpadding="4">'
-                            +'<tbody>'
-                            	+'<tr>'
-	                                +'<td width="100" style=" mso-number-format:\@;">No DPA</td>'
-	                                +'<td width="10" style=" mso-number-format:\@;">:</td>'
-	                                +'<td style=" mso-number-format:\@;">'+config.no_dpa+'</td>'
-	                            +'</tr>'
-                        	+'</tbody>'
+                            +jQuery('table.tabel-standar').eq(2).html()
                         +'</table>'
                     +'</td>'
 				+'</tr>';
-			jQuery('table.tabel-standar').eq(2).closest('tr').before(html);
+			html = jQuery(html);
+			html.find('table td').eq(0).text('Nomor DPA');
+			html.find('table td').eq(2).text(config.no_dpa);
+			jQuery('table.tabel-standar').eq(2).closest('tr').before('<tr>'+html.html()+'</tr>');
+			console.log('insert no DPA');
 		}
 	}
 	jQuery('.text-merah.text_blok.text_20').hide();
