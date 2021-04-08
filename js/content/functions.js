@@ -276,14 +276,15 @@ function tambahTTDppkd(){
 			html.find('table td').eq(0).text('Nomor DPA');
 			html.find('table td').eq(2).text(config.no_dpa);
 			
+			jQuery('table.tabel-standar').eq(2).closest('tr').before('<tr>'+html.html()+'</tr>');
 
-			if(type_dpa.indexOf('PA-RINCIAN BELANJASKPD') != -1){
+			/*if(type_dpa.indexOf('PA-RINCIAN BELANJASKPD') != -1){
 				jQuery('table.tabel-standar').eq(2).closest('tr').before('<tr>'+html.html()+'</tr>');
 			}else{
 				jQuery('table[class="tabel-standar"]#rka').map(function(i, table){
 					jQuery(table).find('table.tabel-standar').eq(1).closest('tr').before('<tr>'+html.html()+'</tr>');
 				});
-			}
+			}*/
 			console.log('insert no DPA');
 		}
 	}
