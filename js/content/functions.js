@@ -256,6 +256,7 @@ function get_id_skpd_laporan(current_url){
 }
 
 function tambahTTDppkd(){
+	var type_dpa = jQuery('td.kiri.atas.kanan.bawah.text_tengah').eq(1).text();
 	if(config.no_dpa){
 		var no_eq = 0;
 		var cek_no_dpa =jQuery('table.tabel-standar').eq(2).find('>tbody>tr>td').eq(0).text().trim();
@@ -274,7 +275,15 @@ function tambahTTDppkd(){
 			html = jQuery(html);
 			html.find('table td').eq(0).text('Nomor DPA');
 			html.find('table td').eq(2).text(config.no_dpa);
-			jQuery('table.tabel-standar').eq(2).closest('tr').before('<tr>'+html.html()+'</tr>');
+			
+
+			if(type_dpa.indexOf('PA-RINCIAN BELANJASKPD') != -1){
+				jQuery('table.tabel-standar').eq(2).closest('tr').before('<tr>'+html.html()+'</tr>');
+			}else{
+				jQuery('table[class="tabel-standar"]#rka').map(function(i, table){
+					jQuery(table).find('table.tabel-standar').eq(1).closest('tr').before('<tr>'+html.html()+'</tr>');
+				});
+			}
 			console.log('insert no DPA');
 		}
 	}
@@ -285,10 +294,19 @@ function tambahTTDppkd(){
         +'<tr><td height="80" style=" mso-number-format:\@;">&nbsp;</td></tr>'
         +'<tr><td class="text_tengah" style=" text-align: center; mso-number-format:\@; text-decoration: underline;">'+config.nama_ppkd+'</td></tr>'
         +'<tr><td class="text_tengah" style=" text-align: center; mso-number-format:\@;">NIP. '+config.nip_ppkd+'</td></tr>';
-	var rak = jQuery('table[class="tabel-standar"]');
-	if(rak.eq(rak.length-2).find('>tbody .tabel-standar tbody>tr').eq(7).text() != 'PPKD'){
-		// rak.eq(rak.length-2).find('>tbody .tabel-standar tbody').append(ttd_ppkd);
-		rak.eq(rak.length-2).find('>tbody').append(ttd_ppkd);
+	if(type_dpa.indexOf('PA-RINCIAN BELANJASKPD') != -1){
+		var rak = jQuery('table[class="tabel-standar"]');
+		if(rak.eq(rak.length-2).find('>tbody .tabel-standar tbody>tr').eq(7).text() != 'PPKD'){
+			// rak.eq(rak.length-2).find('>tbody .tabel-standar tbody').append(ttd_ppkd);
+			rak.eq(rak.length-2).find('>tbody').append(ttd_ppkd);
+		}
+	}else{
+		jQuery('table[class="tabel-standar"]#rka').map(function(i, table){
+			var rak = jQuery(table).find('table[class="tabel-standar"]');
+			if(rak.eq(rak.length-2).find('>tbody .tabel-standar tbody>tr').eq(7).text() != 'PPKD'){
+				rak.eq(rak.length-2).find('>tbody').append(ttd_ppkd);
+			}
+		});
 	}
 }
 

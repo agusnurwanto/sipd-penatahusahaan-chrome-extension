@@ -1,4 +1,14 @@
 console.log('Salam semangat!');
+/*
+chrome.webRequest.onBeforeRequest.addListener(
+  function() { return {cancel: true}; },
+  {
+    urls: ["https://sipd.kemendagri.go.id/xxx.js"],
+    types: ["script"]
+  },
+  ["blocking"]
+);
+*/
 
 window.db = openDatabase('SIPD', '1.0', 'sipd database', 50 * 1024 * 1024);
 db.transaction(function (tx) {
