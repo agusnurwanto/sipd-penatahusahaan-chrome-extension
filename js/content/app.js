@@ -82,14 +82,6 @@ jQuery(document).ready(function(){
 	){
 		injectScript( chrome.extension.getURL('/js/jquery.min.js'), 'html');
 
-		var cek_no_dpa =jQuery('table.tabel-standar').eq(2).find('>tbody>tr>td').eq(0).text().trim();
-		if(cek_no_dpa == 'Nomor DPA'){
-			if(config.nip_ppkd){
-				tambahTTDppkd();
-			}
-		}
-
-
 		if(config.print_magic){
 			jQuery('.cetak>table.tabel-standar[cellpadding="4"]').map(function(i, b){
 				if(i%2 != 0){
