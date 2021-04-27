@@ -9,6 +9,12 @@ Semoga bermanfaat
 
 ### Plugin Wordpress WP-SIPD https://github.com/agusnurwanto/wp-sipd
 
+### Pesan Untuk Tim Pengembang SIPD
+- Semoga selalu diberi kesehatan dan aplikasi SIPD lancar digunakan oleh pemda
+- Extension ini dibuat untuk mengoptimasi kinerja aplikasi SIPD
+- Pengembangan script extension akan berhenti setelah aplikasi SIPD siap untuk mengakomodir semua fitur yang diperlukan oleh pemda
+- Demikian dan salam semangat :blush:
+
 ### Fitur:
 - Memampilkan indikator DPA dari data RKA
 - Edit manual indikator DPA
@@ -16,6 +22,7 @@ Semoga bermanfaat
 - Load data UP dari aplikasi lokal
 - Save UP Lokal by script
 - Perbaikan script singkron RAK setelah ada update di SIPD
+- Hapus RAK yang rincian belanjanya 0 atau selisihnya minus
 
 ### Pengembangan berikutnya:
 - Melengkapi dokumentasi penggunaan di halaman wiki

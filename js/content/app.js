@@ -32,8 +32,12 @@ jQuery(document).ready(function(){
 		var tombol_singkron = ''
 			+'<div class="col-md-3 col-xs-12">'
 				+'<button class="fcbtn btn btn-danger btn-outline btn-1b" id="singkron_rak_ke_lokal"><i class="fa fa-cloud-download m-r-5"></i> <span>Singkron RAK ke DB lokal</span></button>'
+				+'<button style="margin-left: 10px;" class="btn btn-danger btn-1b" id="hapus_rak_all"><i class="fa fa-trash m-r-5"></i> <span>Hapus RAK [-]</span></button>'
 			+'</div>';
 		jQuery('.panel.panel-primary').closest('.row').append(tombol_singkron);
+		jQuery('#hapus_rak_all').on('click', function(){
+			hapus_rak();
+		});
 		jQuery('#singkron_rak_ke_lokal').on('click', function(){
 			var type = 'belanja';
 			if(current_url.indexOf('siap/rak-pendapatan/list') != -1){
@@ -68,10 +72,14 @@ jQuery(document).ready(function(){
 		}, 1000);
 	}else if(current_url.indexOf('siap/rak-belanja/list') != -1){
 		var tombol_singkron = ''
-			+'<button class="fcbtn btn btn-danger btn-outline btn-1b pull-right" id="singkron_rak_ke_lokal" style="margin-right: 20px;"><i class="fa fa-cloud-download m-r-5"></i> <span>Singkron RAK ke DB lokal</span></button>';
-		jQuery('a.btn-circle.pull-right').after(tombol_singkron);
+			+'<button style="margin-left: 10px;" class="btn btn-danger btn-1b pull-right" id="hapus_rak_all"><i class="fa fa-trash m-r-5"></i> <span>Hapus RAK Minus</span></button>'
+			+'<button class="fcbtn btn btn-danger btn-outline btn-1b pull-right" id="singkron_rak_ke_lokal"><i class="fa fa-cloud-download m-r-5"></i> <span>Singkron RAK ke DB lokal</span></button>';
+		jQuery('.col-md-10.pl-0').append(tombol_singkron);
 		jQuery('#singkron_rak_ke_lokal').on('click', function(){
 			singkron_rak_ke_lokal_all();
+		});
+		jQuery('#hapus_rak_all').on('click', function(){
+			hapus_rak_all();
 		});
 	}else if(
 		current_url.indexOf('siap/dpa-bl-rinci/cetak') != -1

@@ -721,3 +721,153 @@ function save_up(){
 		});
 	}
 }
+
+function hapus_rak_all(){
+	jQuery('#wrap-loading').show();
+	var id_skpd = getIdSkpd();
+	jQuery.ajax({
+		url: config.sipd_url+'siap/rak-belanja/tampil-giat/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd,
+		type: 'get',
+		success: function(data){
+			var giat = [];
+			var nama_giat = [];
+			data.data.map(function(b, i){
+				if(b.rincian==0 && b.nilai_rak!=0){
+					b.kode_sbl = b.id_skpd+'.'+b.id_sub_skpd+'.'+b.id_bidang_urusan+'.'+b.id_program+'.'+b.id_giat+'.'+b.id_sub_giat
+					giat.push(b);
+					nama_giat.push(b.nama_sub_giat);
+				}
+			});
+			if(nama_giat.length>=1 && confirm('Apa anda yakin untuk menghapus data RAK dari sub kegiatan ini '+nama_giat.join(', ')+'?')){
+				var last = giat.length-1;
+				giat.reduce(function(sequence, nextData){
+                    return sequence.then(function(current_data){
+                		return new Promise(function(resolve_reduce, reject_reduce){
+                			hapus_rak({ 
+								id_skpd: id_skpd,
+								kode_sbl: current_data.kode_sbl,
+								callback: function(){
+									resolve_reduce(nextData);
+								}
+							});
+                		})
+                        .catch(function(e){
+                            console.log(e);
+                            return Promise.resolve(nextData);
+                        });
+                    })
+                    .catch(function(e){
+                        console.log(e);
+                        return Promise.resolve(nextData);
+                    });
+                }, Promise.resolve(giat[last]))
+                .then(function(data_last){
+	        		alert('Berhasil hapus RAK. Refresh/segarkan halaman ini untuk melihat hasilnya!');
+					jQuery('#wrap-loading').hide();
+                });
+			}else{
+				jQuery('#wrap-loading').hide();
+			}
+		}
+	});
+}
+
+function hapus_rak(options){
+	if(options && options.kode_sbl){
+		var id_skpd = options.id_skpd;
+		var kode_sbl = options.kode_sbl;
+		var _alert = false;
+	}else{
+		var _alert = true;
+		jQuery('#wrap-loading').show();
+		var id_skpd = getIdSkpd();
+		var kode_sbl = get_kode_sbl();
+	}
+	jQuery.ajax({
+		url: config.sipd_url+'siap/rak-belanja/tampil-rincian/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd+'?kodesbl='+kode_sbl,
+		type: 'get',
+		success: function(data){
+			var _akun = [];
+			var no_rek = [];
+			data.data.map(function(b, i){
+				if(+b.selisih < 0){
+					_akun.push(b);
+					no_rek.push(b.nama_akun);
+				}
+			});
+			if(
+				no_rek.length>=1 
+				&& (
+					!_alert 
+					|| (_alert && confirm('Apa anda yakin untuk menghapus data RAK dari rekening ini '+no_rek.join(', ')+'?'))
+				)
+			){
+				var sendData = _akun.map(function(b, i){
+					return new Promise(function(resolve, reject){
+	                	simpan_rak(b).then(function(ret){
+	                		resolve(ret);
+	                	});
+				    })
+	                .catch(function(e){
+	                    console.log(e);
+	                    return Promise.resolve({});
+	                });
+	            });
+	            Promise.all(sendData)
+	        	.then(function(ret){
+	        		if(_alert){
+		        		alert('Berhasil hapus RAK. Refresh/segarkan halaman ini untuk melihat hasilnya!');
+						jQuery('#wrap-loading').hide();
+					}else{
+						if(options.callback){
+							options.callback();
+						}
+					}
+	        	});
+			}else{
+				if(_alert){
+					jQuery('#wrap-loading').hide();
+				}else{
+					if(options.callback){
+						options.callback();
+					}
+				}
+			}
+		}
+	});
+}
+
+function simpan_rak(options){
+	return new Promise(function(resolve, reject){
+		var datapost = {
+			"idUnit": options.id_unit,
+			"idSkpd": options.id_skpd,
+			"idSubSkpd": options.id_sub_skpd,
+			"idBidang": options.id_bidang_urusan,
+			"idProgram": options.id_program,
+			"idKegiatan": options.id_giat,
+			"idSubKegiatan": options.id_sub_giat,
+			"idAkun": options.id_akun,
+			"bulanJanuari":0,
+			"bulanFebuari":0,
+			"bulanMaret":0,
+			"bulanApril":0,
+			"bulanMei":0,
+			"bulanJuni":0,
+			"bulanJuli":0,
+			"bulanAgustus":0,
+			"bulanSeptember":0,
+			"bulanOktober":0,
+			"bulanNovember":0,
+			"bulanDesember":0
+		};
+		jQuery.ajax({
+			url: config.sipd_url+'siap/rak-belanja/simpan-rak-belanja',
+			type: 'post',
+			data: datapost,
+			success: function(data){
+				resolve(true);
+			}
+		});
+	});
+}
