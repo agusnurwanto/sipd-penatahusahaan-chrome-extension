@@ -29,26 +29,33 @@ jQuery(document).ready(function(){
 		|| current_url.indexOf('siap/rak-pendapatan/list') != -1
 		|| current_url.indexOf('siap/rak-pembiayaan/list') != -1
 	){
-		var tombol_singkron = ''
-			+'<div class="col-md-3 col-xs-12">'
-				+'<button class="fcbtn btn btn-danger btn-outline btn-1b" id="singkron_rak_ke_lokal"><i class="fa fa-cloud-download m-r-5"></i> <span>Singkron RAK ke DB lokal</span></button>'
-				+'<button style="margin-left: 10px;" class="btn btn-danger btn-1b" id="hapus_rak_all"><i class="fa fa-trash m-r-5"></i> <span>Hapus RAK [-]</span></button>'
-			+'</div>';
-		jQuery('.panel.panel-primary').closest('.row').append(tombol_singkron);
-		jQuery('#hapus_rak_all').on('click', function(){
-			hapus_rak();
-		});
-		jQuery('#singkron_rak_ke_lokal').on('click', function(){
-			var type = 'belanja';
-			if(current_url.indexOf('siap/rak-pendapatan/list') != -1){
-				type = 'pendapatan';
-			}else if(jQuery('input[name="rek"]').val() == 'penerimaan'){
-				type = 'pembiayaan-penerimaan';
-			}else if(jQuery('input[name="rek"]').val() == 'pengeluaran'){
-				type = 'pembiayaan-pengeluaran';
+		var id_user = idUser();
+		getUser(id_user).then(function(user){
+			var hapus_rak = '';
+			if(user.idJabatan == 15){
+				hapus_rak = '<button style="margin-left: 10px;" class="btn btn-danger btn-1b" id="hapus_rak_all"><i class="fa fa-trash m-r-5"></i> <span>Hapus RAK [-]</span></button>';
 			}
-			singkron_rak_ke_lokal({type: type});
-		});
+			var tombol_singkron = ''
+				+'<div class="col-md-3 col-xs-12">'
+					+'<button class="fcbtn btn btn-danger btn-outline btn-1b" id="singkron_rak_ke_lokal"><i class="fa fa-cloud-download m-r-5"></i> <span>RAK DB Lokal</span></button>'
+					+hapus_rak
+				+'</div>';
+			jQuery('.panel.panel-primary').closest('.row').append(tombol_singkron);
+			jQuery('#hapus_rak_all').on('click', function(){
+				hapus_rak();
+			});
+			jQuery('#singkron_rak_ke_lokal').on('click', function(){
+				var type = 'belanja';
+				if(current_url.indexOf('siap/rak-pendapatan/list') != -1){
+					type = 'pendapatan';
+				}else if(jQuery('input[name="rek"]').val() == 'penerimaan'){
+					type = 'pembiayaan-penerimaan';
+				}else if(jQuery('input[name="rek"]').val() == 'pengeluaran'){
+					type = 'pembiayaan-pengeluaran';
+				}
+				singkron_rak_ke_lokal({type: type});
+			});
+		})
 	}else if(current_url.indexOf('/siap/skkdh') != -1){
 		var tombol_load = ''
 			+'<li class="pull-right" style="padding: 2px 10px;"><button class="fcbtn btn btn-success btn-1b" id="load_up_lokal"><i class="fa fa-cloud-upload m-r-5"></i> <span>Load UP Lokal</span></button></li>'
@@ -71,15 +78,22 @@ jQuery(document).ready(function(){
 			});
 		}, 1000);
 	}else if(current_url.indexOf('siap/rak-belanja/list') != -1){
-		var tombol_singkron = ''
-			+'<button style="margin-left: 10px;" class="btn btn-danger btn-1b pull-right" id="hapus_rak_all"><i class="fa fa-trash m-r-5"></i> <span>Hapus RAK Minus</span></button>'
-			+'<button class="fcbtn btn btn-danger btn-outline btn-1b pull-right" id="singkron_rak_ke_lokal"><i class="fa fa-cloud-download m-r-5"></i> <span>Singkron RAK ke DB lokal</span></button>';
-		jQuery('.col-md-10.pl-0').append(tombol_singkron);
-		jQuery('#singkron_rak_ke_lokal').on('click', function(){
-			singkron_rak_ke_lokal_all();
-		});
-		jQuery('#hapus_rak_all').on('click', function(){
-			hapus_rak_all();
+		var id_user = idUser();
+		getUser(id_user).then(function(user){
+			var hapus_rak = '';
+			if(user.idJabatan == 15){
+				hapus_rak = '<button style="margin-left: 10px;" class="btn btn-danger btn-1b pull-right" id="hapus_rak_all"><i class="fa fa-trash m-r-5"></i> <span>Hapus RAK Minus</span></button>';
+			}
+			var tombol_singkron = ''
+				+hapus_rak
+				+'<button class="fcbtn btn btn-danger btn-outline btn-1b pull-right" id="singkron_rak_ke_lokal"><i class="fa fa-cloud-download m-r-5"></i> <span>Singkron RAK ke DB lokal</span></button>';
+			jQuery('.col-md-10.pl-0').append(tombol_singkron);
+			jQuery('#singkron_rak_ke_lokal').on('click', function(){
+				singkron_rak_ke_lokal_all();
+			});
+			jQuery('#hapus_rak_all').on('click', function(){
+				hapus_rak_all();
+			});
 		});
 	}else if(
 		current_url.indexOf('siap/dpa-bl-rinci/cetak') != -1
