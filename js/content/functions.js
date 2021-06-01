@@ -483,7 +483,7 @@ function singkron_rak_ke_lokal_all(){
                 		id_sub_skpd = val.id_skpd;
                 	}
                 	singkron_rak_ke_lokal({
-                		kode_sbl: val.id_skpd+'.'+id_sub_skpd+'.'+val.id_bidang_urusan+'.'+val.id_program+'.'+val.id_giat+'.'+val.id_sub_giat,
+                		kode_sbl: val.id_unit+'.'+val.id_skpd+'.'+id_sub_skpd+'.'+val.id_bidang_urusan+'.'+val.id_program+'.'+val.id_giat+'.'+val.id_sub_giat,
                 		type: 'belanja'
                 	}, function(detil){
                 		val.detil = detil;
