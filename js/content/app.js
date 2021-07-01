@@ -466,4 +466,13 @@ jQuery(document).ready(function(){
 			}
 		});
 	}
+
+	jQuery('body').on('click', '#table_giat .btn-circle .fa-print', function(){
+		var data = jQuery(this).attr('onclick').split('"');
+		var options = {
+			id_skpd: data[1],
+			kode_bl: kode_bl[3]
+		};
+		setLampiran(options);
+	});
 });

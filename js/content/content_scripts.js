@@ -51,6 +51,14 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 				window.allUnitSCE = res.data[0];
 				get_unit(allUnitSCE); // promise resolve global variable
 			}
+		}else if(res.action && res.action=='get_link_laporan'){
+			window.link_laporan[res.kd_sbl] = res;
+			if(
+				res.link 
+			){
+				_alert = false;
+				set_link_laporan(res);
+			}
 		}else if(res.action && res.action=='get_up'){
 			window.up_all = res.data;
 			set_up();

@@ -871,3 +871,43 @@ function simpan_rak(options){
 		});
 	});
 }
+
+function setLampiran(options){
+	jQuery('a.set-lampiran').remove();
+	if(typeof link_laporan == 'undefined'){
+		link_laporan = {};
+	}
+	if(typeof link_laporan[options.kode_bl] == 'undefined'){
+		link_laporan[options.kode_bl] = {};
+	}
+	if(link_laporan[options.kode_bl].link){
+		set_link_laporan(link_laporan[options.kode_bl]);
+	}else{
+		jQuery('#wrap-loading').show();
+		var data = {
+		    message:{
+		        type: "get-url",
+		        content: {
+	                url: config.url_server_lokal,
+	                type: 'post',
+	                data: { 
+	                    action: 'get_link_laporan',
+	                    tahun_anggaran: config.tahun_anggaran,
+	                    api_key: config.api_key,
+	                    kode_bl: options.kode_bl
+	                },
+	            	return: true
+	            }
+		    }
+		};
+		chrome.runtime.sendMessage(data, function(response) {
+		    console.log('responeMessage', response);
+		});
+	}
+}
+
+function set_link_laporan(res){
+    var link = ''
+        +'<a target="_blank" href="'+res.link+'?key='+get_key()+'" class="set-lampiran apbd-penjabaran-lampiran btn btn-success pull-right" style="margin-right: 10px;">(LOCAL) '+res.text_link+'</a>';
+    jQuery('#mod-hist-jadwal .modal-header .close').after(link);
+}
