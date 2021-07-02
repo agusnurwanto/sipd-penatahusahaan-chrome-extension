@@ -908,6 +908,12 @@ function setLampiran(options){
 
 function set_link_laporan(res){
     var link = ''
-        +'<a target="_blank" href="'+res.link+'?key='+get_key()+'" class="set-lampiran apbd-penjabaran-lampiran btn btn-success pull-right" style="margin-right: 10px;">(LOCAL) '+res.text_link+'</a>';
+        +'<a target="_blank" href="'+res.link+'?key='+get_key()+'&type=dpa_perubahan" class="set-lampiran apbd-penjabaran-lampiran btn btn-success pull-right" style="margin-right: 10px;">(LOCAL) '+res.text_link+'</a>';
     jQuery('#mod-hist-jadwal .modal-header .close').after(link);
+}
+
+function get_key(){
+	var now = new Date().getTime();
+	var key = btoa(now+config.api_key+now);
+	return key;
 }

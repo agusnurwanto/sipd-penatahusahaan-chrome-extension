@@ -471,7 +471,8 @@ jQuery(document).ready(function(){
 		var data = jQuery(this).attr('onclick').split('"');
 		var options = {
 			id_skpd: data[1],
-			kode_bl: kode_bl[3]
+			kode_bl: data[3],
+			tahun_anggaran: config.tahun_anggaran
 		};
 		setLampiran(options);
 	});
