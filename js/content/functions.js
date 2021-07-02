@@ -917,3 +917,40 @@ function get_key(){
 	var key = btoa(now+config.api_key+now);
 	return key;
 }
+
+function singkron_pendahuluan(){
+	jQuery('#wrap-loading').show();
+	jQuery.ajax({
+		url: config.sipd_url+'siap/ttd-dpa/tampil-list-ttd?mode=tim_tapd',
+		success: function(res_tapd){
+			jQuery.ajax({
+				url: config.sipd_url+'siap/ttd-dpa/tampil-list-ttd?mode=data_sekda',
+				success: function(res_sekda){
+					var data_pendahuluan = {
+						tim_tapd: res_tapd,
+						data_sekda: res_sekda
+					};
+					var data = {
+					    message:{
+					        type: "get-url",
+					        content: {
+				                url: config.url_server_lokal,
+				                type: 'post',
+				                data: { 
+				                    action: 'singkron_pendahuluan',
+				                    tahun_anggaran: config.tahun_anggaran,
+				                    api_key: config.api_key,
+				                    data: data_pendahuluan
+				                },
+				            	return: true
+				            }
+					    }
+					};
+					chrome.runtime.sendMessage(data, function(response) {
+					    console.log('responeMessage', response);
+					});
+				}
+			});
+		}
+	});
+}

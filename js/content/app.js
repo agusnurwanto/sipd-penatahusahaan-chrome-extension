@@ -59,13 +59,17 @@ jQuery(document).ready(function(){
 	}else if(current_url.indexOf('/siap/skkdh') != -1){
 		var tombol_load = ''
 			+'<li class="pull-right" style="padding: 2px 10px;"><button class="fcbtn btn btn-success btn-1b" id="load_up_lokal"><i class="fa fa-cloud-upload m-r-5"></i> <span>Load UP Lokal</span></button></li>'
-			+'<li class="pull-right" style="padding: 2px 10px;"><button class="fcbtn btn btn-danger btn-1b" id="save_up_lokal"><i class="fa fa-plus m-r-5"></i> <span>Save UP Lokal</span></button></li>';
+			+'<li class="pull-right" style="padding: 2px 10px;"><button class="fcbtn btn btn-danger btn-1b" id="save_up_lokal"><i class="fa fa-plus m-r-5"></i> <span>Save UP Lokal</span></button></li>'
+			+'<li class="pull-right" style="padding: 2px 10px;"><button class="fcbtn btn btn-danger btn-1b" id="singkron_pendahuluan">Singkron DB Lokal</button></li>';
 		jQuery('ul.breadcrumb').append(tombol_load);
 		jQuery('#load_up_lokal').on('click', function(){
 			load_up_lokal();
 		});
 		jQuery('#save_up_lokal').on('click', function(){
 			save_up();
+		});
+		jQuery('#singkron_pendahuluan').on('click', function(){
+			singkron_pendahuluan();
 		});
 
 		setTimeout(function(){
