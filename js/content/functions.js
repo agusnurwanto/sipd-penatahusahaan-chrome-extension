@@ -349,6 +349,77 @@ function tambahUser(data_user){
 	});
 }
 
+function singkronCurentUser(){
+	jQuery('#wrap-loading').show();
+	relayAjax({
+		url: config.sipd_url+'siap/user/tampil-profil',
+		success: function(current_data){
+			getUserJabatan(current_data.id_user, false).then(function(user){
+				var data_user = [{
+					"skpd":{
+						"idSkpd":user.idSkpd,
+						"namaSkpd":current_data.nama_skpd,
+						"kodeSkpd":null,
+						"idDaerah":user.idDaerah
+					},
+					"userName":user.userName,
+					"nip":user.nipPegawai,
+					"fullName":user.namaPegawai,
+					"nomorHp":user.noHP,
+					"rank":user.pangkat,
+					"npwp":user.npwp,
+					"jabatan":{
+						"idJabatan":user.idJabatan,
+						"namaJabatan":user.namaJabatan,
+						"idRole":user.idRole,
+						"order":user.order,
+						"label":user.namaJabatan,
+						"value":user.idJabatan,
+					},
+					"kpa":user.idUserKpa,
+					"bank":user.bankPembayar,
+					"group":user.golongan,
+					"kodeBank":user.kodeBank,
+					"nama_rekening":user.nama_rekening,
+					"nomorRekening":user.nomorRekening,
+					"pangkatGolongan":user.pangkatGolongan,
+					"tahunPegawai":user.tahunPegawai,
+					"kodeDaerah":user.kodeDaerah,
+					"is_from_sipd":user.is_from_sipd,
+					"is_from_generate":user.is_from_generate,
+					"is_from_external":user.is_from_external,
+					"idSubUnit":user.idSubUnit,
+					"idUser":user.idUser,
+					"idPegawai":user.idPegawai,
+					"alamat":user.alamat,
+					"password":null,
+					"konfirmasiPassword":null
+				}];
+				var data_u = { 
+					action: 'singkron_user_penatausahaan',
+					tahun_anggaran: config.tahun_anggaran,
+					api_key: config.api_key,
+					data_user: data_user
+				};
+				var data_back = {
+				    message:{
+				        type: "get-url",
+				        content: {
+						    url: config.url_server_lokal,
+						    type: 'post',
+						    data: data_u,
+			    			return: true
+						}
+				    }
+				};
+				chrome.runtime.sendMessage(data_back, function(response) {
+				    console.log('responeMessage', response);
+				});
+			});
+		}
+	});
+}
+
 function singkronUser(){
 	jQuery('#wrap-loading').show();
 	var data_user = [];
