@@ -318,7 +318,7 @@ function capitalizeFirstLetter(string) {
 function tambahUser(data_user){
 	jQuery('#wrap-loading').show();
 	return new Promise(function(resolve, reject){
-		jQuery.ajax({
+		relayAjax({
 			url: config.sipd_url+'siap/data/user',
 			type: 'post',
 			data: data_user,
@@ -349,15 +349,111 @@ function tambahUser(data_user){
 	});
 }
 
-function getUserJabatan(id_user){
+function singkronUser(){
+	jQuery('#wrap-loading').show();
+	var data_user = [];
+	relayAjax({
+		url: config.sipd_url+'siap/data/user',
+		success: function(users){
+			users.reduce(function(sequence, nextData){
+                return sequence.then(function(current_data){
+            		return new Promise(function(resolve_reduce, reject_reduce){
+            			getUserJabatan(current_data.idUser, false).then(function(user){
+        					data_user.push({
+        						"skpd":{
+									"idSkpd":user.idSkpd,
+									"namaSkpd":current_data.namaSkpd,
+									"kodeSkpd":null,
+									"idDaerah":user.idDaerah
+								},
+								"userName":user.userName,
+								"nip":user.nipPegawai,
+								"fullName":user.namaPegawai,
+								"nomorHp":user.noHP,
+								"rank":user.pangkat,
+								"npwp":user.npwp,
+								"jabatan":{
+									"idJabatan":user.idJabatan,
+									"namaJabatan":user.namaJabatan,
+									"idRole":user.idRole,
+									"order":user.order,
+									"label":user.namaJabatan,
+									"value":user.idJabatan,
+								},
+								"kpa":user.idUserKpa,
+								"bank":user.bankPembayar,
+								"group":user.golongan,
+								"kodeBank":user.kodeBank,
+								"nama_rekening":user.nama_rekening,
+								"nomorRekening":user.nomorRekening,
+								"pangkatGolongan":user.pangkatGolongan,
+								"tahunPegawai":user.tahunPegawai,
+								"kodeDaerah":user.kodeDaerah,
+								"is_from_sipd":user.is_from_sipd,
+								"is_from_generate":user.is_from_generate,
+								"is_from_external":user.is_from_external,
+								"idSubUnit":user.idSubUnit,
+								"idUser":user.idUser,
+								"idPegawai":user.idPegawai,
+								"alamat":user.alamat,
+								"password":null,
+								"konfirmasiPassword":null
+        					});
+        					return resolve_reduce(nextData);
+            			});
+        			})
+                    .catch(function(e){
+                        console.log(e);
+                        return Promise.resolve(nextData);
+                    });
+                })
+                .catch(function(e){
+                    console.log(e);
+                    return Promise.resolve(nextData);
+                });
+            }, Promise.resolve(users[users.length-1]))
+            .then(function(data_last){
+				var data_u = { 
+					action: 'singkron_user_penatausahaan',
+					tahun_anggaran: config.tahun_anggaran,
+					api_key: config.api_key,
+					data_user: data_user
+				};
+				var data_back = {
+				    message:{
+				        type: "get-url",
+				        content: {
+						    url: config.url_server_lokal,
+						    type: 'post',
+						    data: data_u,
+			    			return: true
+						}
+				    }
+				};
+				chrome.runtime.sendMessage(data_back, function(response) {
+				    console.log('responeMessage', response);
+				});
+            })
+            .catch(function(e){
+                console.log(e);
+            });
+		}
+	});
+}
+
+function getUserJabatan(id_user, cache=true){
 	return new Promise(function(resolve, reject){
 		if(typeof(user_jabCE) == 'undefined'){
-			jQuery.ajax({
-				url: config.sipd_url+'data/user-jabatan/'+id_user,
+			relayAjax({
+				url: config.sipd_url+'siap/data/user-jabatan/'+id_user,
 				type: 'get',
 				success: function(user_jab){
-					window.user_jabCE = user_jab;
-					return resolve(user_jabCE);
+					if(cache){
+						window.user_jabCE = user_jab;
+						return resolve(user_jabCE);
+					}else{
+						return resolve(user_jab);
+					}
 				}
 			});
 		}else{
@@ -369,7 +465,7 @@ function getUserJabatan(id_user){
 function getJabatan(){
 	return new Promise(function(resolve, reject){
 		if(typeof(jabCE) == 'undefined'){
-			jQuery.ajax({
+			relayAjax({
 				url: config.sipd_url+'siap/data/jabatan-hierarki',
 				type: 'get',
 				success: function(jab){
@@ -386,7 +482,7 @@ function getJabatan(){
 function getUser(id_user){
 	return new Promise(function(resolve, reject){
 		if(typeof(userCE) == 'undefined'){
-			jQuery.ajax({
+			relayAjax({
 				url: config.sipd_url+'siap/data/user/'+id_user,
 				type: 'get',
 				success: function(user){
@@ -472,7 +568,7 @@ function getIdSkpd(){
 function singkron_rak_ke_lokal_all(){
 	jQuery('#wrap-loading').show();
 	var id_skpd = getIdSkpd();
-	jQuery.ajax({
+	relayAjax({
 		url: config.sipd_url+'siap/rak-belanja/tampil-giat/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd,
 		type: 'get',
 		success: function(keg){
@@ -533,7 +629,7 @@ function singkron_rak_ke_lokal(opsi, callback){
 		}else if(opsi.type == 'pembiayaan-pengeluaran'){
 			url_rak = config.sipd_url+'siap/rak-pembiayaan/tampil-pembiayaan/pengeluaran/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd;
 		}
-		jQuery.ajax({
+		relayAjax({
 			url: url_rak,
 			type: 'get',
 			success: function(rak){
@@ -666,7 +762,7 @@ function save_up(){
 		load_up_lokal();
 	}else{
 		jQuery('#wrap-loading').show();
-		jQuery.ajax({
+		relayAjax({
 			url: config.sipd_url+'siap/data/besaran-up-skpd',
 			type: 'get',
 			success: function(up){
@@ -682,7 +778,7 @@ function save_up(){
 								});
 								var idBesaranUp = '';
 								if(!b.id_besaran_up){
-									jQuery.ajax({
+									relayAjax({
 										url: config.sipd_url+'siap/edit/skkdh',
 										type: 'post',
 										data: {
@@ -725,7 +821,7 @@ function save_up(){
 function hapus_rak_all(){
 	jQuery('#wrap-loading').show();
 	var id_skpd = getIdSkpd();
-	jQuery.ajax({
+	relayAjax({
 		url: config.sipd_url+'siap/rak-belanja/tampil-giat/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd,
 		type: 'get',
 		success: function(data){
@@ -783,7 +879,7 @@ function hapus_rak(options){
 		var id_skpd = getIdSkpd();
 		var kode_sbl = get_kode_sbl();
 	}
-	jQuery.ajax({
+	relayAjax({
 		url: config.sipd_url+'siap/rak-belanja/tampil-rincian/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd+'?kodesbl='+kode_sbl,
 		type: 'get',
 		success: function(data){
@@ -861,7 +957,7 @@ function simpan_rak(options){
 			"bulanNovember":0,
 			"bulanDesember":0
 		};
-		jQuery.ajax({
+		relayAjax({
 			url: config.sipd_url+'siap/rak-belanja/simpan-rak-belanja',
 			type: 'post',
 			data: datapost,
@@ -920,10 +1016,10 @@ function get_key(){
 
 function singkron_pendahuluan(){
 	jQuery('#wrap-loading').show();
-	jQuery.ajax({
+	relayAjax({
 		url: config.sipd_url+'siap/ttd-dpa/tampil-list-ttd?mode=tim_tapd',
 		success: function(res_tapd){
-			jQuery.ajax({
+			relayAjax({
 				url: config.sipd_url+'siap/ttd-dpa/tampil-list-ttd?mode=data_sekda',
 				success: function(res_sekda){
 					var data_pendahuluan = {
@@ -953,4 +1049,19 @@ function singkron_pendahuluan(){
 			});
 		}
 	});
+}
+
+function relayAjax(options, retries=20, delay=30000, timeout=90000){
+	options.timeout = timeout;
+    jQuery.ajax(options)
+    .fail(function(){
+        if (retries > 0) {
+            console.log('Koneksi error. Coba lagi '+retries);
+            setTimeout(function(){ 
+                relayAjax(options, --retries, delay, timeout);
+            },delay);
+        } else {
+            alert('Capek. Sudah dicoba berkali-kali error terus. Maaf, berhenti mencoba.');
+        }
+    });
 }

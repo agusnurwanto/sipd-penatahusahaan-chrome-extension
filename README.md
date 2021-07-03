@@ -23,6 +23,9 @@ Semoga bermanfaat
 - Save UP Lokal by script
 - Perbaikan script singkron RAK setelah ada update di SIPD
 - Hapus RAK yang rincian belanjanya 0 atau selisihnya minus
+- Singkron User penatausahaan
+- Singkron data pendahuluan (TAPD dan SEKDA)
+- Menampilkan link print DPA lokal
 
 ### Pengembangan berikutnya:
 - Melengkapi dokumentasi penggunaan di halaman wiki

@@ -372,6 +372,12 @@ jQuery(document).ready(function(){
 			});
 		});
 	}else if(current_url.indexOf('/siap/kelola-user') != -1){
+		var tombol_load = ''
+			+'<li class="pull-right" style="padding: 2px 10px;"><button class="fcbtn btn btn-danger btn-1b" id="singkron_user">Singkron DB Lokal</button></li>';
+		jQuery('ul.breadcrumb').append(tombol_load);
+		jQuery('#singkron_user').on('click', function(){
+			singkronUser();
+		});
 		getUser(idUser()).then(function(skpd){
 			if(skpd == ''){
 				getAllUnit(idSkpd()).then(function(all_unit){
@@ -435,7 +441,7 @@ jQuery(document).ready(function(){
 							if(!c_jabatan){
 								return  alert('Data jabatan kosong! Hubungi superman :)');
 							}
-							var data_user = {
+							var data_user = [{
 								"skpd":{
 									"idSkpd":skpd.id_skpd,
 									"namaSkpd":skpd.nama_skpd,
@@ -461,7 +467,7 @@ jQuery(document).ready(function(){
 								"group":group,
 								"password":password,
 								"konfirmasiPassword":konfirmasiPassword
-							};
+							}];
 							console.log('data_user', data_user);
 							tambahUser(data_user);
 						});
