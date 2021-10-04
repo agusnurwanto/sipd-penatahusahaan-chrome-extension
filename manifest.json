@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
-	"name": "SIPD penatausahaan tools",
-	"description": "Chrome extension untuk mempermudah manajemen data di web sipd.kemendagri.go.id/siap",
+	"name": "SIPD Biru tools",
+	"description": "Chrome extension untuk mempermudah manajemen data di web sipd.kemendagri.go.id/siap (SIPD Penatausahaan)",
 	"version": "1.1.7",
 	"icons": {
 		"16": "img/logo-small.png",
