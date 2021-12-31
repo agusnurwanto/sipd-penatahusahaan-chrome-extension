@@ -93,10 +93,36 @@ jQuery(document).ready(function(){
 				+'<button class="fcbtn btn btn-danger btn-outline btn-1b pull-right" id="singkron_rak_ke_lokal"><i class="fa fa-cloud-download m-r-5"></i> <span>Singkron RAK ke DB lokal</span></button>';
 			jQuery('.col-md-10.pl-0').append(tombol_singkron);
 			jQuery('#singkron_rak_ke_lokal').on('click', function(){
-				singkron_rak_ke_lokal_all();
+				if(confirm('Apakah anda yakin untuk melakukang singkronisasi RAK? data di lokal akan diupdate!')){
+					singkron_rak_ke_lokal_all();
+				}
 			});
 			jQuery('#hapus_rak_all').on('click', function(){
-				hapus_rak_all();
+				if(confirm('Apakah anda yakin untuk menghapus RAK yang minus di SIPD penatausahaan?')){
+					hapus_rak_all();
+				}
+			});
+		});
+	}else if(current_url.indexOf('siap/rak-belanja') != -1){
+		var id_user = idUser();
+		getUser(id_user).then(function(user){
+			var hapus_rak = '';
+			if(user.idJabatan == 15){
+				hapus_rak = '<button style="margin-left: 10px;" class="btn btn-danger btn-1b pull-right" id="hapus_rak_all"><i class="fa fa-trash m-r-5"></i> <span>Hapus RAK Minus</span></button>';
+			}
+			var tombol_singkron = ''
+				+hapus_rak
+				+'<button class="fcbtn btn btn-danger btn-outline btn-1b pull-right" id="singkron_rak_ke_lokal"><i class="fa fa-cloud-download m-r-5"></i> <span>Singkron RAK ke DB lokal</span></button>';
+			jQuery('h4.mt-0').parent().append(tombol_singkron);
+			jQuery('#singkron_rak_ke_lokal').on('click', function(){
+				if(confirm('Apakah anda yakin untuk melakukang singkronisasi RAK? data di lokal akan diupdate!')){
+					singkron_rak_ke_lokal_all_pemda();
+				}
+			});
+			jQuery('#hapus_rak_all').on('click', function(){
+				if(confirm('Apakah anda yakin untuk menghapus RAK yang minus di SIPD penatausahaan?')){
+					hapus_rak_all_pemda();
+				}
 			});
 		});
 	}else if(

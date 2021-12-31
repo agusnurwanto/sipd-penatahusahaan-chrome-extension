@@ -648,9 +648,48 @@ function get_kode_unit(){
 	return kd;
 }
 
-function singkron_rak_ke_lokal_all(){
+function singkron_rak_ke_lokal_all_pemda(){
 	jQuery('#wrap-loading').show();
 	var id_skpd = getIdSkpd();
+	relayAjax({
+		url: config.sipd_url+'siap/rak-belanja/tampil-unit/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd,
+		type: 'get',
+		success: function(units){
+			var sendData = units.data.map(function(val, n){
+                return new Promise(function(resolve, reject){
+                	singkron_rak_ke_lokal_all({
+                		id_skpd: val.id_skpd
+                	}, function(){
+                		return resolve();
+                	});
+                })
+                .catch(function(e){
+                    console.log(e);
+                    return Promise.resolve(val);
+                });
+        	});
+
+			Promise.all(sendData)
+        	.then(function(val_all){
+        		alert('Berhasil Singkron Anggaran Kas');
+        		jQuery('#wrap-loading').hide();
+            })
+            .catch(function(err){
+                console.log('err', err);
+        		alert('Ada kesalahan sistem!');
+        		jQuery('#wrap-loading').hide();
+            });
+		}
+	});
+}
+
+function singkron_rak_ke_lokal_all(opsi, cb){
+	if(typeof cb == 'function'){
+		var id_skpd = opsi.id_skpd;
+	}else{
+		jQuery('#wrap-loading').show();
+		var id_skpd = getIdSkpd();
+	}
 	relayAjax({
 		url: config.sipd_url+'siap/rak-belanja/tampil-giat/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd,
 		type: 'get',
@@ -678,8 +717,12 @@ function singkron_rak_ke_lokal_all(){
 
 			Promise.all(sendData)
         	.then(function(val_all){
-        		alert('Berhasil Singkron Anggaran Kas');
-        		jQuery('#wrap-loading').hide();
+        		if(typeof cb == 'function'){
+	        		cb();
+	        	}else{
+	        		alert('Berhasil Singkron Anggaran Kas');
+	        		jQuery('#wrap-loading').hide();
+	        	}
             })
             .catch(function(err){
                 console.log('err', err);
