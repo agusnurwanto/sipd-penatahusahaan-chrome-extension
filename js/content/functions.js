@@ -636,6 +636,18 @@ function getIdSkpd(){
 	return kd;
 }
 
+function get_kd_sub_bl(){
+	var s = jQuery('script');
+	var kd = s.eq(s.length-1).html().split('&kode_sub_bl=')[1].split("'")[0];
+	return kd;
+}
+
+function get_kode_unit(){
+	var s = jQuery('script');
+	var kd = s.eq(s.length-1).html().split('?kode_unit=')[1].split("&")[0];
+	return kd;
+}
+
 function singkron_rak_ke_lokal_all(){
 	jQuery('#wrap-loading').show();
 	var id_skpd = getIdSkpd();
@@ -650,7 +662,8 @@ function singkron_rak_ke_lokal_all(){
                 		id_sub_skpd = val.id_skpd;
                 	}
                 	singkron_rak_ke_lokal({
-                		kode_sbl: val.id_unit+'.'+val.id_skpd+'.'+id_sub_skpd+'.'+val.id_bidang_urusan+'.'+val.id_program+'.'+val.id_giat+'.'+val.id_sub_giat,
+                		kode_sbl: val.id_bidang_urusan+'.'+val.id_program+'.'+val.id_giat+'.'+val.id_sub_giat,
+                		kode_unit: val.id_unit+'.'+val.id_skpd+'.'+id_sub_skpd, 
                 		type: 'belanja'
                 	}, function(detil){
                 		val.detil = detil;
@@ -678,11 +691,14 @@ function singkron_rak_ke_lokal_all(){
 }
 function singkron_rak_ke_lokal(opsi, callback){
 	var kode_sbl = '';
+	var kode_unit = '';
 	if(opsi && opsi.kode_sbl){
 		kode_sbl = opsi.kode_sbl;
+		kode_unit = opsi.kode_unit;
 	}else{
 		if(opsi.type == 'belanja'){
-			kode_sbl = get_kode_sbl();
+			kode_sbl = get_kd_sub_bl();
+			kode_unit = get_kode_unit();
 		}
 		jQuery('#wrap-loading').show();
 	}
@@ -692,7 +708,7 @@ function singkron_rak_ke_lokal(opsi, callback){
 		var id_skpd = getIdSkpd();
 		var url_rak = '';
 		if(opsi.type == 'belanja'){
-			url_rak = config.sipd_url+'siap/rak-belanja/tampil-rincian/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd+'?kodesbl='+kode_sbl;
+			url_rak = config.sipd_url+'siap/rak-belanja/tampil-rincian/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd+'?kode_unit='+kode_unit+'&kode_sub_bl='+kode_sbl;
 		}else if(opsi.type == 'pendapatan'){
 			url_rak = config.sipd_url+'siap/rak-pendapatan/tampil-pendapatan/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd;
 		}else if(opsi.type == 'pembiayaan-penerimaan'){
