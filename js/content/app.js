@@ -53,7 +53,10 @@ jQuery(document).ready(function(){
 				}else if(jQuery('input[name="rek"]').val() == 'pengeluaran'){
 					type = 'pembiayaan-pengeluaran';
 				}
-				singkron_rak_ke_lokal({type: type});
+				if(confirm('Apakah anda yakin untuk melakukan singkronisasi RAK '+type+'? data di lokal akan diupdate!')){
+					jQuery('#wrap-loading').show();
+					singkron_rak_ke_lokal({type: type});
+				}
 			});
 		})
 	}else if(current_url.indexOf('/siap/skkdh') != -1){
@@ -93,7 +96,7 @@ jQuery(document).ready(function(){
 				+'<button class="fcbtn btn btn-danger btn-outline btn-1b pull-right" id="singkron_rak_ke_lokal"><i class="fa fa-cloud-download m-r-5"></i> <span>Singkron RAK ke DB lokal</span></button>';
 			jQuery('.col-md-10.pl-0').append(tombol_singkron);
 			jQuery('#singkron_rak_ke_lokal').on('click', function(){
-				if(confirm('Apakah anda yakin untuk melakukang singkronisasi RAK? data di lokal akan diupdate!')){
+				if(confirm('Apakah anda yakin untuk melakukan singkronisasi RAK? data di lokal akan diupdate!')){
 					singkron_rak_ke_lokal_all();
 				}
 			});
@@ -115,13 +118,41 @@ jQuery(document).ready(function(){
 				+'<button class="fcbtn btn btn-danger btn-outline btn-1b pull-right" id="singkron_rak_ke_lokal"><i class="fa fa-cloud-download m-r-5"></i> <span>Singkron RAK ke DB lokal</span></button>';
 			jQuery('h4.mt-0').parent().append(tombol_singkron);
 			jQuery('#singkron_rak_ke_lokal').on('click', function(){
-				if(confirm('Apakah anda yakin untuk melakukang singkronisasi RAK? data di lokal akan diupdate!')){
+				if(confirm('Apakah anda yakin untuk melakukan singkronisasi RAK? data di lokal akan diupdate!')){
 					singkron_rak_ke_lokal_all_pemda();
 				}
 			});
 			jQuery('#hapus_rak_all').on('click', function(){
 				if(confirm('Apakah anda yakin untuk menghapus RAK yang minus di SIPD penatausahaan?')){
 					hapus_rak_all_pemda();
+				}
+			});
+		});
+	}else if(current_url.indexOf('siap/rak-pendapatan') != -1){
+		var id_user = idUser();
+		getUser(id_user).then(function(user){
+			var tombol_singkron = ''
+				+'<button class="fcbtn btn btn-danger btn-outline btn-1b pull-right" id="singkron_rak_ke_lokal"><i class="fa fa-cloud-download m-r-5"></i> <span>Singkron RAK ke DB lokal</span></button>';
+			jQuery('h4.mt-0').parent().append(tombol_singkron);
+			jQuery('#singkron_rak_ke_lokal').on('click', function(){
+				if(confirm('Apakah anda yakin untuk melakukan singkronisasi RAK Pendapatan? data di lokal akan diupdate!')){
+					singkron_rak_pendapatan_ke_lokal_all_pemda();
+				}
+			});
+		});
+	}else if(current_url.indexOf('siap/rak-pembiayaan/unit/') != -1){
+		var id_user = idUser();
+		getUser(id_user).then(function(user){
+			var tombol_singkron = ''
+				+'<button class="fcbtn btn btn-danger btn-outline btn-1b pull-right" id="singkron_rak_ke_lokal"><i class="fa fa-cloud-download m-r-5"></i> <span>Singkron RAK ke DB lokal</span></button>';
+			jQuery('h4.mt-0').parent().append(tombol_singkron);
+			jQuery('#singkron_rak_ke_lokal').on('click', function(){
+				var type = 'pembiayaan-penerimaan';
+				if(current_url.indexOf('siap/rak-pembiayaan/unit/pengeluaran') != -1){
+					type = 'pembiayaan-pengeluaran';
+				}
+				if(confirm('Apakah anda yakin untuk melakukan singkronisasi RAK '+type+'? data di lokal akan diupdate!')){
+					singkron_rak_pembiayaan_ke_lokal_all_pemda(type);
 				}
 			});
 		});

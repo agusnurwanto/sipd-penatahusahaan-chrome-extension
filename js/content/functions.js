@@ -648,6 +648,76 @@ function get_kode_unit(){
 	return kd;
 }
 
+function singkron_rak_pembiayaan_ke_lokal_all_pemda(type){
+	jQuery('#wrap-loading').show();
+	relayAjax({
+		url: config.sipd_url+'siap/rak-pendapatan/tampil-unit/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/0',
+		type: 'get',
+		success: function(units){
+			var sendData = units.data.map(function(val, n){
+                return new Promise(function(resolve, reject){
+                	singkron_rak_ke_lokal({
+                		id_skpd: val.id_skpd,
+                		type: type
+                	}, function(){
+                		return resolve();
+                	});
+                })
+                .catch(function(e){
+                    console.log(e);
+                    return Promise.resolve(val);
+                });
+        	});
+
+			Promise.all(sendData)
+        	.then(function(val_all){
+        		alert('Berhasil Singkron Anggaran Kas '+type);
+        		jQuery('#wrap-loading').hide();
+            })
+            .catch(function(err){
+                console.log('err', err);
+        		alert('Ada kesalahan sistem!');
+        		jQuery('#wrap-loading').hide();
+            });
+		}
+	});
+}
+
+function singkron_rak_pendapatan_ke_lokal_all_pemda(){
+	jQuery('#wrap-loading').show();
+	relayAjax({
+		url: config.sipd_url+'siap/rak-pendapatan/tampil-unit/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/0',
+		type: 'get',
+		success: function(units){
+			var sendData = units.data.map(function(val, n){
+                return new Promise(function(resolve, reject){
+                	singkron_rak_ke_lokal({
+                		id_skpd: val.id_skpd,
+                		type: 'pendapatan'
+                	}, function(){
+                		return resolve();
+                	});
+                })
+                .catch(function(e){
+                    console.log(e);
+                    return Promise.resolve(val);
+                });
+        	});
+
+			Promise.all(sendData)
+        	.then(function(val_all){
+        		alert('Berhasil Singkron Anggaran Kas Pendapatan');
+        		jQuery('#wrap-loading').hide();
+            })
+            .catch(function(err){
+                console.log('err', err);
+        		alert('Ada kesalahan sistem!');
+        		jQuery('#wrap-loading').hide();
+            });
+		}
+	});
+}
+
 function singkron_rak_ke_lokal_all_pemda(){
 	jQuery('#wrap-loading').show();
 	var id_skpd = getIdSkpd();
@@ -702,7 +772,8 @@ function singkron_rak_ke_lokal_all(opsi, cb){
                 	}
                 	singkron_rak_ke_lokal({
                 		kode_sbl: val.id_bidang_urusan+'.'+val.id_program+'.'+val.id_giat+'.'+val.id_sub_giat,
-                		kode_unit: val.id_unit+'.'+val.id_skpd+'.'+id_sub_skpd, 
+                		kode_unit: val.id_unit+'.'+val.id_skpd+'.'+id_sub_skpd,
+                		id_skpd: id_sub_skpd,
                 		type: 'belanja'
                 	}, function(detil){
                 		val.detil = detil;
@@ -743,12 +814,15 @@ function singkron_rak_ke_lokal(opsi, callback){
 			kode_sbl = get_kd_sub_bl();
 			kode_unit = get_kode_unit();
 		}
-		jQuery('#wrap-loading').show();
 	}
 	if(!kode_sbl && opsi.type=='belanja'){
 		return alert('kodesbl tidak ditemukan!')
 	}else{
-		var id_skpd = getIdSkpd();
+		if(opsi.id_skpd){
+			var id_skpd = opsi.id_skpd;
+		}else{
+			var id_skpd = getIdSkpd();
+		}
 		var url_rak = '';
 		if(opsi.type == 'belanja'){
 			url_rak = config.sipd_url+'siap/rak-belanja/tampil-rincian/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd+'?kode_unit='+kode_unit+'&kode_sub_bl='+kode_sbl;
@@ -759,6 +833,12 @@ function singkron_rak_ke_lokal(opsi, callback){
 		}else if(opsi.type == 'pembiayaan-pengeluaran'){
 			url_rak = config.sipd_url+'siap/rak-pembiayaan/tampil-pembiayaan/pengeluaran/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd;
 		}
+		if(
+			kode_sbl != ''
+			&& kode_unit != ''
+		){
+			kode_sbl = kode_unit+'.'+kode_sbl;
+		}
 		relayAjax({
 			url: url_rak,
 			type: 'get',
@@ -768,6 +848,7 @@ function singkron_rak_ke_lokal(opsi, callback){
 					tahun_anggaran: config.tahun_anggaran,
 					api_key: config.api_key,
 					kode_sbl: kode_sbl,
+					id_skpd: id_skpd,
 					type: opsi.type,
 					data: {}
 				};
@@ -812,7 +893,7 @@ function singkron_rak_ke_lokal(opsi, callback){
 						}
 				    }
 				};
-				if(opsi && opsi.kode_sbl){
+				if(callback){
 					data_back.message.content.return = false;
 				}
 				chrome.runtime.sendMessage(data_back, function(response) {
