@@ -81,7 +81,7 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 			// });
 		});
 	}else if(type == 'get-url'){
-		jQuery.ajax({
+		relayAjax({
 		    url: request.message.content.url,
 		    type: request.message.content.type,
 		    data: request.message.content.data,
@@ -90,10 +90,14 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 		    	if(request.message.content.return){
 			     	var options = {
 			     		type: 'response-fecth-url',
-			     		data: ret
+			     		data: ret,
+				     	tab: sender.tab
 			     	}
+		    		if(request.message.content.data.action){
+		    			options.action = request.message.content.data.action;
+		    		}
 			     	if(request.message.content.resolve){
-			     		options.resolve = resolve;
+			     		options.resolve = request.message.content.resolve;
 			     	}
 			     	sendMessageTabActive(options);
 			    }

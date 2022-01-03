@@ -25,7 +25,8 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 	var current_url = window.location.href;
 	if(request.type == 'response-fecth-url'){
 		var res = request.data;
-		console.log(request.data);
+		var _alert = true;
+		var hide_loading = true;
 		if(res.action && res.action=='get_unit'){
 			if(jQuery('input#email[name="userName"]').length >= 1){
 				var opsi = ['<option value="">Login PA pilih ID SKPD</option>'];
@@ -145,16 +146,21 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 				var kelompok_sasaran = td_sasaran.text()+' '+res.data.bl[0]['sasaran'];
 				td_sasaran.text(kelompok_sasaran);
 			}
-		}else{
+		}else if(request.action && request.action=='singkron_anggaran_kas'){
+			_alert = false;
+			hide_loading = false;
+			window.singkron_anggaran_kas[request.resolve](res.data);
+		}
+
+		if(_alert){
 			alert(res.message);
 		}
-		if(res.resolve){
-			res.resolve(res.data);
+		if(hide_loading){
+			jQuery('#wrap-loading').hide();
+			jQuery('#persen-loading').html('');
+			jQuery('#persen-loading').attr('persen', '');
+			jQuery('#persen-loading').attr('total', '');
 		}
-		jQuery('#wrap-loading').hide();
-		jQuery('#persen-loading').html('');
-		jQuery('#persen-loading').attr('persen', '');
-		jQuery('#persen-loading').attr('total', '');
 	}else if(request.type == 'response-actions'){
 		
 	}

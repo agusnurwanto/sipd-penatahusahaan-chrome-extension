@@ -101,11 +101,34 @@ function sendMessageAll(data, cb){
 
 function sendMessageTabActive(data, cb){
     console.log('data', data);
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, data, function(response) {
+    if(data.tab){
+        chrome.tabs.sendMessage(data.tab.id, data, function(response) {
             if(typeof cb == 'function'){
                 cb(response);
             }
         });
+    }else{
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, data, function(response) {
+                if(typeof cb == 'function'){
+                    cb(response);
+                }
+            });
+        });
+    }
+}
+
+function relayAjax(options, retries=20, delay=10000, timeout=1090000){
+    options.timeout = timeout;
+    jQuery.ajax(options)
+    .fail(function(){
+        if (retries > 0) {
+            console.log('Koneksi error. Coba lagi '+retries);
+            setTimeout(function(){ 
+                relayAjax(options, --retries, delay, timeout);
+            },delay);
+        } else {
+            alert('Capek. Sudah dicoba berkali-kali error terus. Maaf, berhenti mencoba.');
+        }
     });
 }

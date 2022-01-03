@@ -725,28 +725,28 @@ function singkron_rak_ke_lokal_all_pemda(){
 		url: config.sipd_url+'siap/rak-belanja/tampil-unit/daerah/main/budget/'+config.tahun_anggaran+'/'+config.id_daerah+'/'+id_skpd,
 		type: 'get',
 		success: function(units){
-			var sendData = units.data.map(function(val, n){
-                return new Promise(function(resolve, reject){
-                	singkron_rak_ke_lokal_all({
-                		id_skpd: val.id_skpd
-                	}, function(){
-                		return resolve();
-                	});
+			var last = units.data.length-1;
+			units.data.reduce(function(sequence, nextData){
+                return sequence.then(function(current_data){
+                	return new Promise(function(resolve_reduce, reject_reduce){
+                		singkron_rak_ke_lokal_all({
+			        		id_skpd: current_data.id_skpd
+			        	}, function(){
+			        		return resolve_reduce(nextData);
+			        	});
+					})
+                    .catch(function(e){
+                        console.log(e);
+                        return Promise.resolve(nextData);
+                    });
                 })
                 .catch(function(e){
                     console.log(e);
-                    return Promise.resolve(val);
+                    return Promise.resolve(nextData);
                 });
-        	});
-
-			Promise.all(sendData)
-        	.then(function(val_all){
+            }, Promise.resolve(units.data[last]))
+            .then(function(data_last){
         		alert('Berhasil Singkron Anggaran Kas');
-        		jQuery('#wrap-loading').hide();
-            })
-            .catch(function(err){
-                console.log('err', err);
-        		alert('Ada kesalahan sistem!');
         		jQuery('#wrap-loading').hide();
             });
 		}
@@ -893,14 +893,13 @@ function singkron_rak_ke_lokal(opsi, callback){
 						}
 				    }
 				};
-				if(callback){
-					data_back.message.content.return = false;
+				if(typeof window.singkron_anggaran_kas == 'undefined'){
+					window.singkron_anggaran_kas = {};
 				}
+				singkron_anggaran_kas[id_skpd+'_'+kode_sbl] = callback;
+				data_back.message.content.resolve = id_skpd+'_'+kode_sbl;
 				chrome.runtime.sendMessage(data_back, function(response) {
 				    console.log('responeMessage', response);
-					if(callback){
-				    	callback(data_rak);
-				    }
 				});
 			}
 		})
