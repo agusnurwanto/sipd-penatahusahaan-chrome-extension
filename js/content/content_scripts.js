@@ -149,7 +149,7 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 		}else if(
 			request.action 
 			&& request.action == 'singkron_anggaran_kas'
-			&& typeof singkron_anggaran_kas == 'function'
+			&& typeof singkron_anggaran_kas[request.resolve] == 'function'
 		){
 			_alert = false;
 			hide_loading = false;
