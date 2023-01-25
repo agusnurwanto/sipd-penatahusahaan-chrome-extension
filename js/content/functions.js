@@ -1147,9 +1147,7 @@ function singkron_rak_ke_lokal(opsi, callback) {
 function singkron_spd_ke_lokal_all_pemda() {
   jQuery("#wrap-loading").show();
   relayAjax({
-    url:
-      config.sipd_url +
-      "siap/data/skpd/all" ,
+    url: config.sipd_url + "siap/data/skpd/all",
     type: "get",
     success: function (units) {
       var last = units.length - 1;
@@ -1159,13 +1157,9 @@ function singkron_spd_ke_lokal_all_pemda() {
             .then(function (current_data) {
               console.log(current_data);
               return new Promise(function (resolve_reduce, reject_reduce) {
-                singkron_spd_ke_lokal_all(
-                   current_data.idSkpd
-                  ,
-                  function () {
-                    return resolve_reduce(nextData);
-                  }
-                );
+                singkron_spd_ke_lokal_all(current_data.idSkpd, function () {
+                  return resolve_reduce(nextData);
+                });
               }).catch(function (e) {
                 console.log(e);
                 return Promise.resolve(nextData);
@@ -1185,7 +1179,7 @@ function singkron_spd_ke_lokal_all_pemda() {
 }
 
 function singkron_spd_ke_lokal_all(id_skpd, callback) {
-  jQuery('#wrap-loading').show();
+  jQuery("#wrap-loading").show();
   relayAjax({
     url: config.sipd_url + "siap/data/spd/" + id_skpd + "/all/1",
     type: "get",
@@ -1194,8 +1188,8 @@ function singkron_spd_ke_lokal_all(id_skpd, callback) {
       var sendData = spd.data.map((v, i) => {
         return new Promise(function (resolve, rejct) {
           singkron_spd_ke_lokal(v, function (detil) {
-            v.detil=detil;
-            resolve(v)
+            v.detil = detil;
+            resolve(v);
           });
         }).catch(function (e) {
           console.log(e);
@@ -1210,7 +1204,7 @@ function singkron_spd_ke_lokal_all(id_skpd, callback) {
         })
         .catch(function (e) {
           alert("Ada Kesalahan Sistem!");
-          jQuery('#wrap-loading').hide();
+          jQuery("#wrap-loading").hide();
         });
     },
   });
@@ -1226,17 +1220,17 @@ function singkron_spd_ke_lokal(spd, callback) {
         action: "singkron_detail_spd",
         tahun_anggaran: config.tahun_anggaran,
         api_key: config.api_key,
-        idSpd:spd.idSpd,
-        nomorSpd:spd.nomorSpd,
-        totalSpd:spd.totalSpd,
-        keteranganSpd:spd.keteranganSpd,
-        ketentuanLainnya:spd.ketentuanLainnya,
-        id_skpd:spd.idSkpd,
+        idSpd: spd.idSpd,
+        nomorSpd: spd.nomorSpd,
+        totalSpd: spd.totalSpd,
+        keteranganSpd: spd.keteranganSpd,
+        ketentuanLainnya: spd.ketentuanLainnya,
+        id_skpd: spd.idSkpd,
         data: {},
       };
-      var idDetailSpd=0;
+      var idDetailSpd = 0;
       detail.map((v, i) => {
-        if(idDetailSpd!=v.idDetailSpd){
+        if (idDetailSpd != v.idDetailSpd) {
           detail_spd.data[i] = {};
           detail_spd.data[i].idSpd = v.idSpd;
           detail_spd.data[i].idDetailSpd = v.idDetailSpd;
@@ -1248,7 +1242,7 @@ function singkron_spd_ke_lokal(spd, callback) {
           detail_spd.data[i].id_akun = v.id_akun;
           detail_spd.data[i].nilai = v.nilaiDetailSpd;
         }
-        idDetailSpd=v.idDetailSpd;
+        idDetailSpd = v.idDetailSpd;
       });
       var data_back = {
         message: {
@@ -1317,6 +1311,36 @@ function load_up_lokal(nama_skpd) {
       });
     }
   }
+}
+
+function singkron_up_lokal() {
+  relayAjax({
+    url: config.sipd_url + "siap/data/besaran-up-skpd",
+    method: "get",
+    dataType:'json',
+    success:(response)=>{
+      console.log(data);
+      var data = {
+        message: {
+          type: "get-url",
+          content: {
+            url: config.url_server_lokal,
+            type: "post",
+            data: {
+              action: "singkron_up",
+              tahun_anggaran: config.tahun_anggaran,
+              api_key: config.api_key,
+              data: response.data,
+            },
+            return: true,
+          },
+        },
+      };
+      chrome.runtime.sendMessage(data, function (response) {
+        console.log("responeMessage", response);
+      });
+    }
+  });
 }
 
 function set_up() {
