@@ -26,6 +26,28 @@ jQuery(document).ready(function () {
       var val = jQuery(this).val();
       jQuery("#email").val(val);
     });
+  }else if(current_url.indexOf("siap/sp2d")!=-1){
+    var id_user=idUser();
+    var tombol_singkron='<li class="pull-right" style="padding: 2px 10px;"><button class="fcbtn btn btn-success btn-1b" id="singkron_sp2d_lokal"><i class="fa fa-cloud-upload m-r-5"></i> <span>Singkron SP2D ke DB lokal</span></button></li>'+
+    '<li class="pull-right" style="padding: 2px 10px;"><button class="fcbtn btn btn-success btn-1b" id="singkron_spm_lokal"><i class="fa fa-cloud-upload m-r-5"></i> <span>Singkron SPM ke DB lokal</span></button></li>'+
+    '<li class="pull-right" style="padding: 2px 10px;"><button class="fcbtn btn btn-success btn-1b" id="singkron_spp_lokal"><i class="fa fa-cloud-upload m-r-5"></i> <span>Singkron SPP ke DB lokal</span></button></li>';
+    jQuery('ul.breadcrumb').append(tombol_singkron);
+    //singkronisasi SPP ke database lokal
+    $('#singkron_spp_lokal').on('click',()=>{
+      alert("singkronisasi spp")
+    })
+    //singkronisasi SPM ke database lokal
+    $('#singkron_spm_lokal').on('click',()=>{
+      alert("singkronisasi spm")
+    })
+    //singkronisasi SP2D ke database lokal
+    $('#singkron_sp2d_lokal').on('click',()=>{
+      if(confirm("Apakah anda yakin untk melakukan singkronisasi SP2D?/data lokal akan diupdate!")){
+        jQuery("#wrap-loading").show();
+        singkron_sp2d_ke_lokal();
+      }
+    })
+
   }else if(current_url.indexOf("siap/spd")!=-1) {
 	var id_user=idUser();
 		var tombol_singkron=
