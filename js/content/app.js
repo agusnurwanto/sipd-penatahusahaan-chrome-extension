@@ -5,6 +5,7 @@ jQuery(document).ready(function () {
     '<div id="wrap-loading">' +
     '<div class="lds-hourglass"></div>' +
     '<div id="persen-loading"></div>' +
+    '<div id="caption-loading"></div>' +
     "</div>";
   if (jQuery("#wrap-loading").length == 0) {
     jQuery("body").prepend(loading);
@@ -52,10 +53,10 @@ jQuery(document).ready(function () {
 	var id_user=idUser();
 		var tombol_singkron=
 		"" +
-        '<div class="col-md-3 col-xs-12">' +
+        '<li class="pull-right" style="padding: 2px 10px;">' +
         '<button class="fcbtn btn btn-danger btn-outline btn-1b" id="singkron_spd_ke_lokal"><i class="fa fa-cloud-download m-r-5"></i> <span>Singkron SPD DB Lokal</span></button>' +
-        "</div>";
-		jQuery(".wrapper-lg.inline.w-full.body-spd").append(tombol_singkron)
+        "</li>";
+		jQuery("ul.breadcrumb").append(tombol_singkron)
 		jQuery("#singkron_spd_ke_lokal").on('click',function(){
 			if (
 				confirm(
