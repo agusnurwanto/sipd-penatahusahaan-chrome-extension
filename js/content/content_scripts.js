@@ -155,14 +155,15 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 			hide_loading = false;
 			window.singkron_anggaran_kas[request.resolve](res.data);
 		}
-		else if(request.action && request.action=="singkron_sp2d"){
-			_alert =false;
-			hide_loading = false;
-		}
 
 		else if(request.action && request.action=="singkron_detail_spd"){
 			_alert=false;
 			hide_loading =false;
+		}
+
+		else if(request.action && request.action=="singkron_spm"){
+			_alert=false;
+			hide_loading=false;
 		}
 
 		if(_alert){
@@ -170,9 +171,6 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 		}
 		if(hide_loading){
 			jQuery('#wrap-loading').hide();
-			jQuery('#persen-loading').html('');
-			jQuery('#persen-loading').attr('', '');
-			jQuery('#persen-loading').attr('total', '');
 		}
 	}else if(request.type == 'response-actions'){
 		

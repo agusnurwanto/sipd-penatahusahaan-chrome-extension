@@ -1155,7 +1155,6 @@ function singkron_spd_ke_lokal_all_pemda() {
         .reduce(function (sequence, nextData) {
           return sequence
             .then(function (current_data) {
-              console.log(current_data);
               return new Promise(function (resolve_reduce, reject_reduce) {
                 singkron_spd_ke_lokal_all(current_data.idSkpd, function () {
                   return resolve_reduce(nextData);
@@ -1343,13 +1342,137 @@ function singkron_up_lokal() {
   });
 }
 
+//Singkronisasi SPM SP2D
+function singkron_spm_ke_lokal_pemda() {
+  jQuery("#wrap-loading").show();
+  relayAjax({
+    url: config.sipd_url + "siap/data/skpd/all",
+    type: "get",
+    success: function (units) {
+      last=units.length-1;
+      var sendData = units.map((v, i) => {
+        return new Promise(function (resolve, reject) {
+          
+          singkron_spm_ke_lokal_skpd(v,()=>{
+            resolve(v);
+            if(i==last){
+              $('#wrap-loading').hide();
+              alert("Berhasil singkron SPM");
+            }
+          })
+        }).catch((e) => {
+          return Promise.resolve(v);
+        });
+      });
+      Promise.all(sendData)
+      .then((val_all)=>{
+
+      })
+    },
+  });
+}
+
+function singkron_spm_ke_lokal_skpd(skpd, callback) {
+  relayAjax({
+    url: config.sipd_url + "siap/data/spm/" + skpd.idSkpd,
+    method: "GET",
+    dataType: "JSON",
+    success: function (response) {
+      var spm = {
+        action: "singkron_spm",
+        tahun_anggaran: config.tahun_anggaran,
+        api_key: config.api_key,
+        data: {},
+      };
+      response.map((v, i) => {
+        spm.data[i] = {
+          idSpm: v.idSpm,
+          idSpp: v.idSpp,
+          created_at: v.created_at,
+          updated_at: v.updated_at,
+          idDetailSpm: v.idDetailSpm,
+          id_skpd: v.id_skpd,
+          tahunSpm: v.tahun_spm,
+          id_jadwal: v.id_jadwal,
+          id_tahap: v.id_tahap,
+          status_tahap: v.status_tahap,
+          nomorSpp: v.nomorSpp,
+          nilaiSpp: v.nilaiSpp,
+          tanggalSpp: v.tanggalSpp,
+          keteranganSpp: v.keteranganSpp,
+          idSubUnit: v.idSubUnit,
+          nilaiDisetujuiSpp: v.nilaiDisetujuiSpp,
+          tanggalDisetujuiSpp: v.tanggalDisetujuiSpp,
+          jenisSpp: v.jenisSpp,
+          verifikasiSpp: v.verifikasiSpp,
+          keteranganVerifikasi: v.keteranganVerifikasi,
+          idSpd: v.idSpd,
+          idPengesahanSpj: v.idPengesahanSpj,
+          kunciRekening: v.kunciRekening,
+          alamatPenerimaSpp: v.alamatPenerimaSpp,
+          bankPenerimaSpp: v.bankPenerimaSpp,
+          nomorRekeningPenerimaSpp: v.nomorRekeningPenerimaSpp,
+          npwpPenerimaSpp: v.npwpPenerimaSpp,
+          jenisLs: v.jenisLs,
+          isUploaded: v.isUploaded,
+          tahunSpp: v.tahunSpp,
+          idKontrak: v.idKontrak,
+          idBA: v.idBA,
+          isSpm: v.isSpm,
+          statusPerubahan: v.statusPerubahan,
+          isDraft: v.isDraft,
+          isGaji: v.isGaji,
+          is_sptjm: v.is_sptjm,
+          tanggal_otorisasi: v.tanggal_otorisasi,
+          is_otorisasi: v.is_otorisasi,
+          bulan_gaji: v.bulan_gaji,
+          id_pegawai_pptk: v.id_pegawai_pptk,
+          nama_pegawai_pptk: v.nama_pegawai_pptk,
+          nip_pegawai_pptk: v.nip_pegawai_pptk,
+          kode_tahap: v.kode_tahap,
+          is_tpp: v.is_tpp,
+          bulan_tpp: v.bulan_tpp,
+          id_pengajuan_tu: v.id_pengajuan_tu,
+          nomor_pengajuan_tu: v.nomor_pengajuan_tu,
+          nomorSpm: v.nomorSpm,
+          tanggalSpm: v.tanggalSpm,
+          keteranganSpm: v.keteranganSpm,
+          verifikasiSpm: v.verifikasiSpm,
+          tanggalVerifikasiSpm: v.tanggalVerifikasiSpm,
+          jenisSpm: v.jenisSpm,
+          nilaiSpm: v.nilaiSpm,
+          keteranganVerifikasiSpm: v.keteranganVerifikasiSpm,
+          isOtorisasi: v.isOtorisasi,
+          tanggalOtorisasi: v.tanggalOtorisasi,
+        };
+      });
+      var data_back = {
+        message: {
+          type: "get-url",
+          content: {
+            url: config.url_server_lokal,
+            type: "post",
+            data: spm,
+            return: true,
+          },
+        },
+      };
+      chrome.runtime.sendMessage(data_back, (resp) => {
+        console.log("Response From Background", resp);
+        callback()
+      });
+    },
+  });
+}
+
+//Singkronisasi SP2D SIPD
 function singkron_sp2d_ke_lokal() {
   relayAjax({
     url: config.sipd_url + "siap/data/sp2d/0",
     method: "GET",
     type: "json",
     success: (resp) => {
-      var tmp=JSON.parse(resp);
+      var tmp = JSON.parse(resp);
       //kirim data json ke background
       var data = {
         action: "singkron_sp2d",
@@ -1359,7 +1482,7 @@ function singkron_sp2d_ke_lokal() {
       };
       tmp.map((v, i) => {
         data.data[i] = {};
-        data.data[i].idSpm=v.idSpm;
+        data.data[i].idSpm = v.idSpm;
         data.data[i].nomorSp2d = v.nomorSp2d;
         data.data[i].tanggalSp2d = v.tanggalSp2d;
         data.data[i].tahunSp2d = v.tahunSp2d;
@@ -1427,8 +1550,6 @@ function singkron_sp2d_ke_lokal() {
       };
       chrome.runtime.sendMessage(data_back, (response) => {
         console.log(response);
-        $("#wrap-loading").hide();
-        alert(response.message);
       });
     },
   });

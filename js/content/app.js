@@ -5,7 +5,6 @@ jQuery(document).ready(function () {
     '<div id="wrap-loading">' +
     '<div class="lds-hourglass"></div>' +
     '<div id="persen-loading"></div>' +
-    '<div id="caption-loading"></div>' +
     "</div>";
   if (jQuery("#wrap-loading").length == 0) {
     jQuery("body").prepend(loading);
@@ -39,7 +38,7 @@ jQuery(document).ready(function () {
     })
     //singkronisasi SPM ke database lokal
     $('#singkron_spm_lokal').on('click',()=>{
-      alert("singkronisasi spm")
+      singkron_spm_ke_lokal_pemda();
     })
     //singkronisasi SP2D ke database lokal
     $('#singkron_sp2d_lokal').on('click',()=>{
