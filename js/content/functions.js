@@ -1272,136 +1272,167 @@ function load_up_lokal(nama_skpd) {
     if (nama_skpd) {
       alert(
         'Data diload dulu dari lokal. Setelah selesai klik tombol "Load UP Lokal" lagi!'
-        );
-      }
-      jQuery("#wrap-loading").show();
-      var data_up = {
-        action: "get_up",
+      );
+    }
+    jQuery("#wrap-loading").show();
+    var data_up = {
+      action: "get_up",
+      tahun_anggaran: config.tahun_anggaran,
+      api_key: config.api_key,
+    };
+    var data_back = {
+      message: {
+        type: "get-url",
+        content: {
+          url: config.url_server_lokal,
+          type: "post",
+          data: data_up,
+          return: true,
+        },
+      },
+    };
+    chrome.runtime.sendMessage(data_back, function (response) {
+      console.log("responeMessage", response);
+    });
+  } else {
+    set_up();
+    // console.log('nama_skpd', nama_skpd);
+    if (nama_skpd) {
+      up_all.map(function (val, key) {
+        if (val.mapping && val.mapping.nama_skpd == nama_skpd) {
+          var nilai_up = 0;
+          val.rinc.map(function (d, n) {
+            nilai_up += +d.nilai;
+          });
+          jQuery(".edit-skkdh form .form-group input").val(
+            formatMoney(nilai_up, 0, 0, ".")
+          );
+        }
+      });
+    }
+  }
+}
+
+function singkron_up_lokal() {
+  relayAjax({
+    url: config.sipd_url + "siap/data/besaran-up-skpd",
+    method: "get",
+    dataType: "json",
+    success: (response) => {
+      console.log(data);
+      var data = {
+        message: {
+          type: "get-url",
+          content: {
+            url: config.url_server_lokal,
+            type: "post",
+            data: {
+              action: "singkron_up",
+              tahun_anggaran: config.tahun_anggaran,
+              api_key: config.api_key,
+              data: response.data,
+            },
+            return: true,
+          },
+        },
+      };
+      chrome.runtime.sendMessage(data, function (response) {
+        console.log("responeMessage", response);
+      });
+    },
+  });
+}
+
+function singkron_sp2d_ke_lokal() {
+  relayAjax({
+    url: config.sipd_url + "siap/data/sp2d/0",
+    method: "GET",
+    type: "json",
+    success: (resp) => {
+      var tmp=JSON.parse(resp);
+      //kirim data json ke background
+      var data = {
+        action: "singkron_sp2d",
         tahun_anggaran: config.tahun_anggaran,
         api_key: config.api_key,
+        data: {},
       };
+      tmp.map((v, i) => {
+        data.data[i] = {};
+        data.data[i].idSpm=v.idSpm;
+        data.data[i].nomorSp2d = v.nomorSp2d;
+        data.data[i].tanggalSp2d = v.tanggalSp2d;
+        data.data[i].tahunSp2d = v.tahunSp2d;
+        data.data[i].idSubUnit = v.idSubUnit;
+        data.data[i].keteranganSp2d = v.keteranganSp2d;
+        data.data[i].jenisSp2d = v.jenisSp2d;
+        data.data[i].nilaiSp2d = v.nilaiSp2d;
+        data.data[i].jenisLs = v.jenisLs;
+        data.data[i].isPergeseran = v.isPergeseran;
+        data.data[i].isPelimpahan = v.isPelimpanan;
+        data.data[i].created_at = v.created_at;
+        data.data[i].updated_at = v.updated_at;
+        data.data[i].isTbpLs = v.isTbpLs;
+        data.data[i].idSkpd = v.idSkpd;
+        data.data[i].isDraft = v.isDraft;
+        data.data[i].idSp2d = v.idSp2d;
+        data.data[i].verifikasiSp2d = v.verifikasiSp2d;
+        data.data[i].tanggalVerifikasi = v.tanggalVerifikasi;
+        data.data[i].idSkpdTujuan = v.idSkpdTujuan;
+        data.data[i].kunciRekening = v.kunciRekening;
+        data.data[i].isBku = v.isBku;
+        data.data[i].bulan_gaji = v.bulan_gaji;
+        data.data[i].tahun_gaji = v.tahun_gaji;
+        data.data[i].jenis_gaji = v.jenis_gaji;
+        data.data[i].is_bku_skpd = v.is_bku_skpd;
+        data.data[i].id_jadwal = v.id_jadwal;
+        data.data[i].id_tahap = v.id_tahap;
+        data.data[i].status_tahap = v.status_tahap;
+        data.data[i].kode_tahap = v.kode_tahap;
+        data.data[i].status_aklap = v.status_aklap;
+        data.data[i].nomor_jurnal = v.nomor_jurnal;
+        data.data[i].jurnal_id = v.jurnal_id;
+        data.data[i].metode = v.metode;
+        data.data[i].bulan_tpp = v.bulan_tpp;
+        data.data[i].tahun_tpp = v.tahun_tpp;
+        data.data[i].nomor_rekening_pembayar = v.nomor_rekening_pembayar;
+        data.data[i].bank_rekening_pembayar = v.bank_rekening_pembayar;
+        data.data[i].is_rekening_pembayar = v.is_rekening_pembayar;
+        data.data[i].nomorSpm = v.nomorSpm;
+        data.data[i].tanggalSpm = v.tanggalSpm;
+        data.data[i].tahunSpm = v.tahunSpm;
+        data.data[i].keteranganSpm = v.keteranganSpm;
+        data.data[i].verifikasiSpm = v.verifikasiSpm;
+        data.data[i].tanggalVerifikasiSpm = v.tanggalVerifikasiSpm;
+        data.data[i].jenisSpm = v.jenisSpm;
+        data.data[i].nilaiSpm = v.nilaiSpm;
+        data.data[i].keteranganVerifikasiSpm = v.keteranganVerifikasiSpm;
+        data.data[i].isOtorisasi = v.isOtorisasi;
+        data.data[i].tanggalOtorisasi = v.tanggal_otorisasi;
+        data.data[i].is_sptjm = v.is_sptjm;
+        data.data[i].namaSkpd = v.namaSkpd;
+        data.data[i].kodeSkpd = v.kodeSkpd;
+        data.data[i].is_bpk = v.is_bpk;
+      });
       var data_back = {
         message: {
           type: "get-url",
           content: {
             url: config.url_server_lokal,
             type: "post",
-            data: data_up,
+            data: data,
             return: true,
           },
         },
       };
-      chrome.runtime.sendMessage(data_back, function (response) {
-        console.log("responeMessage", response);
+      chrome.runtime.sendMessage(data_back, (response) => {
+        console.log(response);
+        $("#wrap-loading").hide();
+        alert(response.message);
       });
-    } else {
-      set_up();
-      // console.log('nama_skpd', nama_skpd);
-      if (nama_skpd) {
-        up_all.map(function (val, key) {
-          if (val.mapping && val.mapping.nama_skpd == nama_skpd) {
-            var nilai_up = 0;
-            val.rinc.map(function (d, n) {
-              nilai_up += +d.nilai;
-            });
-            jQuery(".edit-skkdh form .form-group input").val(
-              formatMoney(nilai_up, 0, 0, ".")
-              );
-            }
-          });
-        }
-      }
-    }
-    
-    function singkron_up_lokal() {
-      relayAjax({
-        url: config.sipd_url + "siap/data/besaran-up-skpd",
-        method: "get",
-        dataType:'json',
-        success:(response)=>{
-          console.log(data);
-          var data = {
-            message: {
-              type: "get-url",
-              content: {
-                url: config.url_server_lokal,
-                type: "post",
-                data: {
-                  action: "singkron_up",
-                  tahun_anggaran: config.tahun_anggaran,
-                  api_key: config.api_key,
-                  data: response.data,
-                },
-                return: true,
-              },
-            },
-          };
-          chrome.runtime.sendMessage(data, function (response) {
-            console.log("responeMessage", response);
-          });
-        }
-      });
-    }
-    
-    function singkron_sp2d_ke_lokal(halaman){
-      relayAjax({
-        url:config.sipd_url+'siap/data/sp2d-with-paging?page='+halaman+'&per_page=20&statusVerifikasi[]=0&statusVerifikasi[]=1',
-        method:'GET',
-        type:'json',
-        success:(resp)=>{
-          //kirim data json ke background
-          var data = {
-            action: "singkron_sp2d",
-            tahun_anggaran: config.tahun_anggaran,
-            api_key: config.api_key,
-            data: {},
-          };
-          resp.data.data.map((v,i)=>{
-            data.data[i]={};
-            data.data[i].bulan_gaji=v.bulan_gaji;
-            data.data[i].bulan_tpp=v.bulan_tpp;
-            data.data[i].idSkpdTujuan=v.idSkpdTujuan;
-            data.data[i].idSp2d=v.idSp2d;
-            data.data[i].jenisLs=v.jenisLs;
-            data.data[i].keteranganSp2d=v.keteranganSp2d;
-            data.data[i].namaSkpd=v.namaSkpd;
-            data.data[i].nomorSp2d=v.nomorSp2d;
-            data.data[i].nomorSpm=v.nomorSpm;
-            data.data[i].tanggalSp2d=(new Date(v.tanggalSp2d)).getFullYear()+'-'+((new Date(v.tanggalSp2d)).getMonth()+1)+'-'+(new Date(v.tanggalSp2d)).getDate();
-            data.data[i].tanggalSpm=(new Date(v.tanggalSpm)).getFullYear()+'-'+((new Date(v.tanggalSpm)).getMonth()+1)+'-'+(new Date(v.tanggalSpm)).getDate();
-            data.data[i].verifikasiSp2d=v.verifikasiSp2d;
-          });
-          var data_back = {
-            message: {
-              type: "get-url",
-              content: {
-                url: config.url_server_lokal,
-                type: "post",
-                data: data,
-                return: true,
-              },
-            },
-          };
-          if (typeof window.singkron_sp2d== "undefined") {
-            window.singkron_sp2d = {};
-          }
-          window.singkron_sp2d['sp2d'] = function(a){
-
-          };
-          chrome.runtime.sendMessage(data_back,(response)=>{
-            console.log(response);
-          })
-      if(resp.data.current_page<resp.data.last_page){
-        singkron_sp2d_ke_lokal(resp.data.current_page+1)
-      }else{
-        $('#wrap-loading').hide();
-        alert("Berhasil singkron SP2D ke DB lokal")
-      }
-    }
-  })
+    },
+  });
 }
-
-
 
 function set_up() {
   jQuery("#tab-skkdh table.table-sp2d > tbody > tr").map(function (i, b) {
