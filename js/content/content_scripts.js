@@ -154,16 +154,16 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
 			_alert = false;
 			hide_loading = false;
 			window.singkron_anggaran_kas[request.resolve](res.data);
-		}
-
-		else if(request.action && request.action=="singkron_detail_spd"){
+		}else if(request.action && request.action=="singkron_detail_spd"){
 			_alert=false;
 			hide_loading =false;
-		}
-
-		else if(request.action && request.action=="singkron_spm"){
+		}else if(request.action && request.action=="singkron_spm"){
 			_alert=false;
 			hide_loading=false;
+		}else if(request.action && request.action=="singkron_spp_detail"){
+			_alert=false;
+			hide_loading=false;
+			window.singkron_spp_detail.resolve(window.singkron_spp_detail.nexData);
 		}
 
 		if(_alert){

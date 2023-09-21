@@ -34,15 +34,21 @@ jQuery(document).ready(function () {
     jQuery('ul.breadcrumb').append(tombol_singkron);
     //singkronisasi SPP ke database lokal
     $('#singkron_spp_lokal').on('click',()=>{
-      alert("singkronisasi spp")
+      if(confirm("Apakah anda yakin untk melakukan singkronisasi SPP? data lokal akan diupdate!")){
+        jQuery("#wrap-loading").show();
+        singkron_spp_ke_lokal();
+      }
     })
     //singkronisasi SPM ke database lokal
     $('#singkron_spm_lokal').on('click',()=>{
-      singkron_spm_ke_lokal_pemda();
+        if(confirm("Apakah anda yakin untk melakukan singkronisasi SPM? data lokal akan diupdate!")){
+            jQuery("#wrap-loading").show();
+            singkron_spm_ke_lokal_pemda();
+        }
     })
     //singkronisasi SP2D ke database lokal
     $('#singkron_sp2d_lokal').on('click',()=>{
-      if(confirm("Apakah anda yakin untk melakukan singkronisasi SP2D?/data lokal akan diupdate!")){
+      if(confirm("Apakah anda yakin untk melakukan singkronisasi SP2D? data lokal akan diupdate!")){
         jQuery("#wrap-loading").show();
         singkron_sp2d_ke_lokal();
       }
