@@ -1469,6 +1469,121 @@ function singkron_spp_ke_lokal_skpd(skpd, tipe, callback) {
 
 //Singkronisasi SPM
 function singkron_spm_ke_lokal_pemda() {
+  // spm masih draft
+  getVerSPM(0).then(function(){
+    // spm disetujui
+    getVerSPM(1).then(function(){
+      // spm ditolak
+      getVerSPM(2).then(function(){
+        // spm batal
+        getVerSPM(3).then(function(){
+          jQuery("#wrap-loading").hide();
+          alert("Berhasil singkron SPM");
+        });
+      });
+    });
+  });
+}
+
+function getVerSPM(tipe, page=0){
+  return new Promise(function(resolve, reject){
+    page++;
+    relayAjax({
+      url: config.sipd_url + "/siap/data/verifikasi-spm?statusVerifikasiSpm="+tipe+"&page="+page,
+      type: "get",
+      success: function (ret) {
+        var data = ret.data.data;
+        var spm = {
+          action: "singkron_spm",
+          tahun_anggaran: config.tahun_anggaran,
+          api_key: config.api_key,
+          idSkpd: skpd.idSkpd,
+          tipe: tipe,
+          data: data,
+          page: page
+        };
+        var data_back = {
+          message: {
+            type: "get-url",
+            content: {
+              url: config.url_server_lokal,
+              type: "post",
+              data: spm,
+              return: false
+            },
+          },
+        };
+        chrome.runtime.sendMessage(data_back, (resp) => {
+          console.log("Kirim data SPM page="+page+" tipe="+tipe+". Response From Background", resp);
+        });
+        var last = data.length-1;
+        data.reduce(function (sequence, nextData) {
+          return sequence.then(function (current_data) {
+            return new Promise(function (resolve_reduce, reject_reduce) {
+              relayAjax({
+                url: config.sipd_url + "siap/data/pajak-detail-spm/" + current_data.idSpm,
+                method: "GET",
+                dataType: "JSON",
+                success: function (res) {
+                  if(res.length >= 1){
+                    var spp_detail = {
+                      action: "singkron_spm_detail",
+                      tahun_anggaran: config.tahun_anggaran,
+                      api_key: config.api_key,
+                      idSkpd: skpd.idSkpd,
+                      tipe: tipe,
+                      data: res,
+                    };
+                    var data_back = {
+                      message: {
+                        type: "get-url",
+                        content: {
+                          url: config.url_server_lokal,
+                          type: "post",
+                          data: spp_detail,
+                          return: true
+                        },
+                      },
+                    };
+                    chrome.runtime.sendMessage(data_back, (resp) => {
+                      window.singkron_spm_detail = {
+                        resolve: resolve_reduce,
+                        nexData: nextData
+                      };
+                      console.log("Kirim data SPM detail ID="+current_data.idSpm+" tipe="+tipe+". Response From Background", resp);
+                    });
+                  }else{
+                    console.log('SPM detail dengan idSpm='+current_data.idSpm+" tipe="+tipe+" kosong!");
+                    resolve_reduce(nextData);
+                  }
+                }
+              });
+            }).catch(function (e) {
+              console.log(e);
+              return Promise.resolve(nextData);
+            });
+          })
+          .catch(function (e) {
+            console.log(e);
+            return Promise.resolve(nextData);
+          });
+        }, Promise.resolve(data[last]))
+        .then(function (data_last) {
+          if(ret.data.current_page < ret.data.last_page){
+            getVerSPM(tipe, page)
+            .then(function(){
+              resolve();
+            })
+          }else{
+            resolve();
+          }
+        });
+      },
+    });
+  });
+}
+
+function singkron_spm_ke_lokal_pemda_lama() {
   relayAjax({
     url: config.sipd_url + "siap/data/skpd/all",
     type: "get",
